@@ -16,6 +16,7 @@ import {
 } from '../Actions/serviceActions';
 import { toastDisable } from '../Actions/toastActions';
 import Spinner from './Features/spinner/Spinner';
+import { processServiceData } from '../Utils/ProcessData';
 
 const StyledButton = styled(Button)({
   backgroundColor: '#1ABB9C',
@@ -39,28 +40,7 @@ const ServiceEditor = ({
 
   const param = query.get('newId') === 'true';
 
-  // to avoid null or undefined inputs in the text fields and send null values for non updated string values
-  const processData = (
-    data: ServiceDetails,
-    processType: string
-  ): ServiceDetails => {
-    const keyList = Object.keys(data);
-    for (let i = 0; i < keyList.length; i += 1) {
-      const key = keyList[i];
-      if (
-        (data[key as keyof ServiceDetails] === null ||
-          data[key as keyof ServiceDetails] === undefined ||
-          data[key as keyof ServiceDetails] === '') &&
-        processType === PROCESS_TYPE.PRE_PROCESS
-      ) {
-        data = { ...data, [key]: '' };
-      } else if (data[key as keyof ServiceDetails] === '')
-        data = { ...data, [key]: null };
-    }
-    return data;
-  };
-
-  content = processData(content, PROCESS_TYPE.PRE_PROCESS);
+  content = processServiceData(content, PROCESS_TYPE.PRE_PROCESS);
 
   const loadingData = useSelector((state: any) => state.loadingData);
 
@@ -117,7 +97,7 @@ const ServiceEditor = ({
       if (request.ca_certificates === '') request.ca_certificates = null;
       dispatch(postCurrentServiceData(request, navigate));
     } else {
-      const request: ServiceDetails = processData(
+      const request: ServiceDetails = processServiceData(
         formData,
         PROCESS_TYPE.POST_PROCESS
       );
