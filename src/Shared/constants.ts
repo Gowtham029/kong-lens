@@ -94,11 +94,6 @@ export const ROUTE_TEXT_FIELDS: keyValueType[] = [
 
 export const SERVICE_TEXT_FIELDS: keyValueType[] = [
   { key: 'name', value: 'The service name.', type: 'text' },
-  {
-    key: 'description',
-    value: 'An optional service description.',
-    type: 'text',
-  },
   { key: 'tags', value: 'Optionally add tags to the service', type: 'list' },
   {
     key: 'protocol',
@@ -159,7 +154,6 @@ export const SERVICE_TEXT_FIELDS: keyValueType[] = [
 export const SERVICE_DETAILS_INTERFACE = {
   id: '',
   name: '',
-  description: '',
   retries: 5,
   protocol: '',
   host: '',
@@ -185,11 +179,10 @@ export const ROUTE_DETAILS_INTERFACE = {
   methods: [],
   strip_path: true,
   preserve_host: false,
-  protocols: [],
+  protocols: ['http', 'https'],
   snis: [],
   sources: [],
   destinations: [],
-  service_name: '',
   service: {},
 };
 
@@ -202,19 +195,10 @@ export const API_RESPONSE_SNACK_MESSAGE = {
   createdNewRoute: 'Successfully created the Route!',
   modifiedExistingRoute: 'Successfully modified the Route!',
   deletedService: 'Successfully deleted the Service',
+  deletedRoute: 'Successfully deleted the Route',
   unableToDelete: 'Unable to delete data, Please try again!',
   fetchedData: 'Successfully fetched data!',
-};
-
-export const ACTION_TYPES = {
-  OPEN_ROUTE_MODAL: 'OPEN_ROUTE_MODAL',
-  REFRESH_ROUTE_TABLE: 'REFRESH_ROUTE_TABLE',
-  OPEN_SNACK_BAR: 'OPEN_SNACK_BAR',
-  SET_SNACK_BAR_MESSAGE: 'SET_SNACK_BAR_MESSAGE',
-  UPDATE_ROUTE_DATA: 'UPDATE_ROUTE_DATA',
-  UPDATE_ROUTE_DATA_VALUES: 'UPDATE_ROUTE_DATA_VALUES',
-  UPDATE_SERVICE_DATA: 'UPDATE_SERVICE_DATA',
-  UPDATE_SERVICE_DATA_VALUES: 'UPDATE_SERVICE_DATA_VALUES',
+  incorrectHeader: 'schema violation (headers: expected a map)',
 };
 
 export const PROCESS_TYPE = {

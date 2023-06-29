@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Box,
   CssBaseline,
@@ -13,23 +14,21 @@ import { useLocation, useParams } from 'react-router-dom';
 import { IconInfoCircle } from '@tabler/icons-react';
 import AltRouteIcon from '@mui/icons-material/AltRoute';
 import ExtensionIcon from '@mui/icons-material/Extension';
-import CircularProgress from '@mui/material/CircularProgress';
 import { useDispatch, useSelector } from 'react-redux';
 import PageHeader from './Features/PageHeader';
 import ServiceEditor from './ServiceEditor';
 import MiniPageHeader from './Features/MiniPageHeader';
-import {
-  ACTION_TYPES,
-  API_RESPONSE_SNACK_MESSAGE,
-  BASE_API_URL,
-  SERVICE_TEXT_FIELDS,
-} from '../Shared/constants';
-import { GET } from '../Helpers/ApiHelpers';
-import { ServiceDetails, navBarProps, snackMessageProp } from '../interfaces';
+import { SERVICE_TEXT_FIELDS } from '../Shared/constants';
+import { navBarProps } from '../interfaces';
 import Routes from '../Pages/Routes';
 import Plugins from '../Pages/Plugins';
 import { SnackBarAlert } from './Features/SnackBarAlert';
-import { updateValue } from '../Reducer/StoreReducer';
+import {
+  getCurrentServiceData,
+  getCurrentServiceRouteData,
+} from '../Actions/serviceActions';
+import { toastDisable } from '../Actions/toastActions';
+import Spinner from './Features/spinner/Spinner';
 
 const ServiceDetail = (): JSX.Element => {
   const { id } = useParams();
@@ -53,94 +52,43 @@ const ServiceDetail = (): JSX.Element => {
     setNumber(() => number + 1);
   };
 
-  const openSnackBar = useSelector(
-    (state: { reducer: { openSnackBar: boolean } }) =>
-      state.reducer.openSnackBar
-  );
-
-  const snack = useSelector(
-    (state: { reducer: { snackBar: snackMessageProp } }) =>
-      state.reducer.snackBar
+  const { isOpen, toastMessage } = useSelector(
+    (state: any) => state.toastReducer
   );
 
   const serviceData = useSelector(
-    (state: { reducer: { serviceData: ServiceDetails } }) =>
-      state.reducer.serviceData
+    (state: any) => state.serviceReducer.currentServiceData
   );
-
-  const [loading, setLoading] = React.useState(true);
 
   const query = new URLSearchParams(search);
 
-  const paramValue = query.get('newId');
+  const param = query.get('newId') === 'true';
 
-  const updateFlagReducer = (type: string, value: boolean): void => {
-    dispatch(updateValue({ type, value }));
-  };
-
-  const updateSnackMessage = (message: string, severity: string): void => {
-    dispatch(
-      updateValue({
-        type: ACTION_TYPES.SET_SNACK_BAR_MESSAGE,
-        message,
-        severity,
-      })
-    );
-  };
+  const loadingData = useSelector((state: any) => state.loadingData);
 
   React.useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const getService = async () => {
-      if (paramValue === 'false') {
-        await GET({
-          url: `${BASE_API_URL}/services/${id}`,
-          headers: { 'Access-Control-Allow-Origin': '*' },
-        })
-          .then((response) => {
-            if (response.status === 200) {
-              updateSnackMessage(
-                API_RESPONSE_SNACK_MESSAGE.fetchedData,
-                'success'
-              );
-              dispatch(
-                updateValue({
-                  type: ACTION_TYPES.UPDATE_SERVICE_DATA,
-                  data: response.data,
-                })
-              );
-            }
-          })
-          .catch((err) => {
-            updateSnackMessage(
-              err.response && err.response.data
-                ? err.response.data.message
-                : API_RESPONSE_SNACK_MESSAGE.unableToSaveData,
-              'error'
-            );
-          });
-        updateFlagReducer(ACTION_TYPES.OPEN_SNACK_BAR, true);
-      }
-      setLoading(false);
-    };
-    getService();
+    if (!param) {
+      dispatch(getCurrentServiceData(id as string));
+      dispatch(getCurrentServiceRouteData(id as string));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [id, loading, paramValue]);
+  }, [dispatch]);
 
   const renderComponent = {
     'Service Details': (
-      <ServiceEditor service={serviceData} textFields={SERVICE_TEXT_FIELDS} />
+      <ServiceEditor content={serviceData} textFields={SERVICE_TEXT_FIELDS} />
     ),
-    Routes: <Routes type="nested" />,
-    Plugins: <Plugins type="nested" />,
+    Routes: <Routes nested />,
+    Plugins: <Plugins nested />,
   };
   return (
     <Box sx={{ width: '1250px', margin: 'auto' }}>
       <SnackBarAlert
-        open={openSnackBar}
-        message={snack.message}
-        severity={snack.severity}
+        open={isOpen}
+        message={toastMessage.message}
+        severity={toastMessage.severity}
         handleClose={() => {
-          updateFlagReducer(ACTION_TYPES.OPEN_SNACK_BAR, false);
+          dispatch(toastDisable());
         }}
       />
       <br />
@@ -170,15 +118,11 @@ const ServiceDetail = (): JSX.Element => {
                   borderRadius: '10px',
                 }}
                 onClick={() => {
-                  !(paramValue === 'true')
-                    ? handleCurrentPage(text.value)
-                    : null;
+                  !param ? handleCurrentPage(text.value) : null;
                 }}
                 disablePadding
               >
-                <ListItemButton
-                  disabled={paramValue === 'true' && currentPage !== text.value}
-                >
+                <ListItemButton disabled={param && currentPage !== text.value}>
                   <ListItemIcon> {text.icon}</ListItemIcon>
                   <ListItemText primary={text.value} />
                 </ListItemButton>
@@ -197,12 +141,8 @@ const ServiceDetail = (): JSX.Element => {
             icon={<IconInfoCircle />}
           />
 
-          {loading ? (
-            <Box
-              sx={{ display: 'flex', height: '500px', alignItems: 'center' }}
-            >
-              <CircularProgress sx={{ margin: 'auto', color: '#1ABB9C' }} />
-            </Box>
+          {loadingData ? (
+            <Spinner />
           ) : (
             renderComponent[currentPage as keyof typeof renderComponent]
           )}

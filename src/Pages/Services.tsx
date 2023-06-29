@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
   MaterialReactTable,
@@ -11,139 +12,60 @@ import useAwaitableComponent from 'use-awaitable-component';
 import { useNavigate } from 'react-router-dom';
 import { Delete } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
-import { DELETE, GET } from '../Helpers/ApiHelpers';
+import { CircularProgress } from '@mui/joy';
 import PageHeader from '../Components/Features/PageHeader';
 import DialogModal from '../Components/Features/DialogModal';
-import {
-  BASE_API_URL,
-  API_RESPONSE_SNACK_MESSAGE,
-  ACTION_TYPES,
-} from '../Shared/constants';
-import { snackMessageProp, ServiceDetails } from '../interfaces';
+import { ServiceDetails } from '../interfaces';
 import { SnackBarAlert } from '../Components/Features/SnackBarAlert';
 import { RawView } from '../Components/Features/RawView';
 import { TagComponent } from '../Components/Features/TagComponent';
-import { updateValue } from '../Reducer/StoreReducer';
+import { ACTION_TYPES } from '../Shared/actionTypes';
+import { deleteServiceData, getServiceData } from '../Actions/serviceActions';
+import { toastDisable } from '../Actions/toastActions';
+import Spinner from '../Components/Features/spinner/Spinner';
 
 const Services = (): JSX.Element => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const dispatch = useDispatch();
   const deleteRow = useRef(false);
-  const openSnackBar = useSelector(
-    (state: { reducer: { openSnackBar: boolean } }) =>
-      state.reducer.openSnackBar
-  );
-  const snack = useSelector(
-    (state: { reducer: { snackBar: snackMessageProp } }) =>
-      state.reducer.snackBar
-  );
 
-  const updateFlagReducer = (type: string, value: boolean): void => {
-    dispatch(updateValue({ type, value }));
-  };
-
-  const updateSnackMessage = (message: string, severity: string): void => {
-    dispatch(
-      updateValue({
-        type: ACTION_TYPES.SET_SNACK_BAR_MESSAGE,
-        message,
-        severity,
-      })
-    );
-  };
+  const { isOpen, toastMessage } = useSelector(
+    (state: any) => state.toastReducer
+  );
 
   const [promise, setPromise] = useState<unknown>();
-  const [showRaw, setShowRaw] = useState<Map<string, boolean>>(
-    new Map<string, boolean>()
+  const { showServiceRawView } = useSelector(
+    (state: any) => state.rawViewReducer
   );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [status, execute, resolve, reject, reset] = useAwaitableComponent();
-  const [tableData, setTableData] = useState<ServiceDetails[]>([]);
+  const tableData = useSelector(
+    (state: any) => state.serviceReducer.serviceData
+  );
+  const loadingData = useSelector((state: any) => state.loadingData);
+  // const [tableData, setTableData] = useState<ServiceDetails[]>([]);
   const navigate = useNavigate();
   React.useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    const getServices = async () => {
-      await GET({
-        url: `${BASE_API_URL}/services/`,
-        headers: { 'Access-Control-Allow-Origin': '*' },
-      })
-        .then((response) => {
-          if (response.status === 200) {
-            const { data } = response.data;
-            for (let i = 0; i < data.length; i += 1) {
-              const curServiceDetails: ServiceDetails = data[i];
-              Object.keys(curServiceDetails).forEach(() => {
-                if (typeof curServiceDetails.created_at === 'number') {
-                  curServiceDetails.created_at = new Date(
-                    curServiceDetails.created_at
-                  ).toLocaleDateString();
-                }
-              });
-            }
-            setTableData(data);
-            for (let i = 0; i < data.length; i += 1) {
-              showRaw.set(data[i].id, false);
-            }
-          }
-          updateSnackMessage(API_RESPONSE_SNACK_MESSAGE.fetchedData, 'success');
-        })
-        .catch((err) => {
-          updateSnackMessage(
-            err.response && err.response.data
-              ? err.response.data.message
-              : API_RESPONSE_SNACK_MESSAGE.unableToFetchData,
-            'error'
-          );
-        });
-    };
-    getServices();
-    updateFlagReducer(ACTION_TYPES.OPEN_SNACK_BAR, true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    dispatch(getServiceData());
+  }, [dispatch]);
 
   const handleDeleteRow = useCallback(
     (row: MRT_Row<ServiceDetails>) => {
-      if (
-        // !confirm(`Are you sure you want to delete ${row.getValue('firstName')}`)
-        !deleteRow
-      ) {
+      if (!deleteRow) {
         return;
       }
       // send api delete request here, then refetch or update local table data for re-render
-      // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-      const deleteData = async () => {
-        await DELETE({
-          url: `${BASE_API_URL}/services/${row.original.id}`,
-          headers: { 'Access-Control-Allow-Origin': '*' },
-        })
-          .then((response) => {
-            if (response.status === 204) {
-              updateSnackMessage(
-                API_RESPONSE_SNACK_MESSAGE.deletedService,
-                'info'
-              );
-              tableData.splice(row.index, 1);
-              setTableData([...tableData]);
-            }
-          })
-          .catch((err) => {
-            updateSnackMessage(
-              err.response
-                ? err.response.data.message
-                : API_RESPONSE_SNACK_MESSAGE.unableToDelete,
-              'error'
-            );
-          });
-      };
-      deleteData();
-      updateFlagReducer(ACTION_TYPES.OPEN_SNACK_BAR, true);
+      dispatch(deleteServiceData(row.original.id, row.index));
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [dispatch, tableData]
+    [dispatch]
   );
 
-  const handleRawView = (id: string, value: boolean): void => {
-    setShowRaw((map) => new Map(map.set(id, value)));
+  const handleRawView = (key: string, value: boolean): void => {
+    dispatch({
+      type: ACTION_TYPES.HANDLE_SERVICE_RAW_VIEW,
+      payload: { key, value },
+    });
   };
 
   const handleAwaitModal = async (
@@ -248,6 +170,12 @@ const Services = (): JSX.Element => {
       {
         accessorKey: 'created_at',
         header: 'Created',
+        // eslint-disable-next-line react/no-unstable-nested-components
+        Cell: ({ row }) => (
+          <div style={{ display: 'flex' }}>
+            {new Date(row.original.created_at).toLocaleDateString('en-US')}
+          </div>
+        ),
       },
       {
         accessorKey: 'client_certificate',
@@ -273,84 +201,91 @@ const Services = (): JSX.Element => {
         />
       </Box>
       <SnackBarAlert
-        open={openSnackBar}
-        message={snack.message}
-        severity={snack.severity}
+        open={isOpen}
+        message={toastMessage.message}
+        severity={toastMessage.severity}
         handleClose={() => {
-          updateFlagReducer(ACTION_TYPES.OPEN_SNACK_BAR, false);
+          dispatch(toastDisable());
         }}
       />
       <br />
-      <MaterialReactTable
-        displayColumnDefOptions={{
-          'mrt-row-actions': {
-            muiTableHeadCellProps: {
-              align: 'center',
-            },
-            size: 120,
-          },
-        }}
-        columns={columns}
-        data={tableData}
-        editingMode="modal" // default
-        enableColumnOrdering
-        enableEditing
-        initialState={{
-          columnVisibility: {
-            id: false,
-            connect_timeout: false,
-            write_timeout: false,
-            read_timeout: false,
-            retries: false,
-            protocol: false,
-            port: false,
-          },
-        }}
-        renderRowActions={({ row }) => (
-          <Box sx={{ display: 'flex', gap: '16px', justifyContent: 'center' }}>
-            <Tooltip arrow placement="left" title="Raw">
-              <>
-                <VisibilityIcon
-                  sx={{ cursor: 'pointer' }}
-                  onClick={() => handleRawView(row.original.id, true)}
-                />
-                <RawView
-                  json={row.original}
-                  open={showRaw.get(row.original.id) as boolean}
-                  onClose={() => handleRawView(row.original.id, false)}
-                />
-              </>
-            </Tooltip>
-            <Tooltip arrow placement="right-end" title="Delete">
-              <ActionIcon
-                color="red"
-                onClick={() => {
-                  handleAwaitModal(row);
-                }}
-              >
-                <Delete />
-              </ActionIcon>
-            </Tooltip>
-          </Box>
-        )}
-        renderTopToolbarCustomActions={() => (
-          <Button
-            sx={{
-              backgroundColor: '#1ABB9C',
-              color: 'white',
-              '&:hover': {
-                backgroundColor: '#1AAA9C',
+      {loadingData && <Spinner />}
+      {!loadingData && (
+        <MaterialReactTable
+          displayColumnDefOptions={{
+            'mrt-row-actions': {
+              muiTableHeadCellProps: {
+                align: 'center',
               },
-            }}
-            onClick={() => {
-              navigate(`/services/createService/?newId=true`);
-            }}
-            variant="contained"
-          >
-            Create New Service
-          </Button>
-        )}
-      />
+              size: 120,
+            },
+          }}
+          columns={columns}
+          data={tableData}
+          editingMode="modal" // default
+          enableColumnOrdering
+          enableEditing
+          initialState={{
+            columnVisibility: {
+              id: false,
+              connect_timeout: false,
+              write_timeout: false,
+              read_timeout: false,
+              retries: false,
+              protocol: false,
+              port: false,
+              ca_certificates: false,
+              client_certificate: false,
+            },
+          }}
+          renderRowActions={({ row }) => (
+            <Box
+              sx={{ display: 'flex', gap: '16px', justifyContent: 'center' }}
+            >
+              <Tooltip arrow placement="left" title="Raw">
+                <>
+                  <VisibilityIcon
+                    sx={{ cursor: 'pointer' }}
+                    onClick={() => handleRawView(row.original.id, true)}
+                  />
+                  <RawView
+                    json={row.original}
+                    open={showServiceRawView[row.original.id] as boolean}
+                    onClose={() => handleRawView(row.original.id, false)}
+                  />
+                </>
+              </Tooltip>
+              <Tooltip arrow placement="right-end" title="Delete">
+                <ActionIcon
+                  color="red"
+                  onClick={() => {
+                    handleAwaitModal(row);
+                  }}
+                >
+                  <Delete />
+                </ActionIcon>
+              </Tooltip>
+            </Box>
+          )}
+          renderTopToolbarCustomActions={() => (
+            <Button
+              sx={{
+                backgroundColor: '#1ABB9C',
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: '#1AAA9C',
+                },
+              }}
+              onClick={() => {
+                navigate(`/services/createService/?newId=true`);
+              }}
+              variant="contained"
+            >
+              Create New Service
+            </Button>
+          )}
+        />
+      )}
       <DialogModal
         description="Really want to delete the selected item?"
         open={confirmDialogOpen}

@@ -1,38 +1,42 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
-import { ModalClose, Sheet, Typography, Modal, ModalOverflow } from '@mui/joy';
+import {
+  ModalClose,
+  Typography,
+  Modal,
+  ModalOverflow,
+  ModalDialog,
+} from '@mui/joy';
+import { useSelector } from 'react-redux';
 import { CreateRouteProps } from '../../interfaces';
 import RouteEditor from '../RouteEditor';
-import {
-  ROUTE_DETAILS_INTERFACE,
-  ROUTE_TEXT_FIELDS,
-} from '../../Shared/constants';
+import { ROUTE_TEXT_FIELDS } from '../../Shared/constants';
 
 export const CreateRoute = ({
   open,
   onClose,
+  serviceName,
 }: CreateRouteProps): JSX.Element => {
+  const routeData = useSelector(
+    (state: any) => state.routeReducer.currentRouteData
+  );
+
   return (
     <Modal
       aria-labelledby="modal-title"
       aria-describedby="modal-desc"
       open={open}
       onClose={onClose}
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}
     >
-      <ModalOverflow sx={{ maxWidth: '800px', margin: 'auto' }}>
-        <Sheet
-          variant="outlined"
+      <ModalOverflow>
+        <ModalDialog
+          aria-labelledby="modal-dialog-overflow"
           sx={{
             maxWidth: 'auto',
             borderRadius: 'md',
             p: 3,
             boxShadow: 'lg',
             border: '3px solid #1ABB9C',
-            overflowY: 'scroll',
           }}
         >
           <ModalClose />
@@ -44,14 +48,10 @@ export const CreateRoute = ({
             fontWeight="lg"
             mb={1}
           >
-            Add Route
+            Add Route to {serviceName}
           </Typography>
-          <RouteEditor
-            content={ROUTE_DETAILS_INTERFACE}
-            textFields={ROUTE_TEXT_FIELDS}
-            param
-          />
-        </Sheet>
+          <RouteEditor content={routeData} textFields={ROUTE_TEXT_FIELDS} />
+        </ModalDialog>
       </ModalOverflow>
     </Modal>
   );
