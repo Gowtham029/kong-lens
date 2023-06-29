@@ -10,35 +10,25 @@ import {
   ListItemText,
 } from '@mui/material';
 import * as React from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { IconInfoCircle } from '@tabler/icons-react';
 import ExtensionIcon from '@mui/icons-material/Extension';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PageHeader from './Features/PageHeader';
 import MiniPageHeader from './Features/MiniPageHeader';
 import { ROUTE_TEXT_FIELDS } from '../Shared/constants';
 import { navBarProps } from '../interfaces';
-import RouteEditor from './RouteEditor';
 import Plugins from '../Pages/Plugins';
 import { SnackBarAlert } from './Features/SnackBarAlert';
-import { getCurrentRouteData } from '../Actions/routeActions';
 import { toastDisable } from '../Actions/toastActions';
 import Spinner from './Features/spinner/Spinner';
+import { getCurrentRouteData } from '../Actions/routeActions';
+import RouteEditor from './RouteEditor';
 
 const RouteDetail = (): JSX.Element => {
   const { id } = useParams();
 
   const dispatch = useDispatch();
-
-  const { search } = useLocation();
-
-  const query = new URLSearchParams(search);
-
-  const param = query.get('newId') === 'true';
-
-  const routeData = useSelector(
-    (state: any) => state.routeReducer.currentRouteData
-  );
 
   const list: navBarProps[] = [
     { value: 'Route Details', icon: <IconInfoCircle /> },
@@ -49,28 +39,39 @@ const RouteDetail = (): JSX.Element => {
 
   const [number, setNumber] = React.useState(0);
 
-  const { isOpen, toastMessage } = useSelector(
-    (state: any) => state.toastReducer
-  );
-
-  const { loadingData } = useSelector((state: any) => state.loadingData);
-
   const handleCurrentPage = (value: string): void => {
     setCurrentPage(value);
     setNumber(() => number + 1);
   };
 
+  const { isOpen, toastMessage } = useSelector(
+    (state: any) => state.toastReducer
+  );
+
+  const { currentRouteData } = useSelector((state: any) => state.routeReducer);
+
+  const loadingData = useSelector((state: any) => state.loadingData);
+
   React.useEffect(() => {
-    if (!param) dispatch(getCurrentRouteData(id as string));
+    const put = (): void => {
+      dispatch(getCurrentRouteData(id as string));
+    };
+    put();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, []);
 
   const renderComponent = {
     'Route Details': (
-      <RouteEditor content={routeData} textFields={ROUTE_TEXT_FIELDS} />
+      <RouteEditor
+        content={currentRouteData}
+        textFields={ROUTE_TEXT_FIELDS}
+        param
+      />
     ),
     Plugins: <Plugins nested />,
   };
+
   return (
     <Box sx={{ width: '1250px', margin: 'auto' }}>
       <SnackBarAlert
@@ -84,7 +85,7 @@ const RouteDetail = (): JSX.Element => {
       <br />
       <CssBaseline />
       <PageHeader
-        header={`Routes ${routeData.name}`}
+        header={`Route ${currentRouteData.name}`}
         description="<a href='/routes' style=color:'#79C2E3';text-decoration:none>routes</a> / show"
       />
       <br />
@@ -130,6 +131,7 @@ const RouteDetail = (): JSX.Element => {
             header={`<b>${currentPage}</b>`}
             icon={<IconInfoCircle />}
           />
+
           {loadingData ? (
             <Spinner />
           ) : (

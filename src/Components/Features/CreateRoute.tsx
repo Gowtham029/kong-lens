@@ -9,8 +9,8 @@ import {
 } from '@mui/joy';
 import { useSelector } from 'react-redux';
 import { CreateRouteProps } from '../../interfaces';
-import RouteEditor from '../RouteEditor';
 import { ROUTE_TEXT_FIELDS } from '../../Shared/constants';
+import RouteEditor from '../RouteEditor';
 
 export const CreateRoute = ({
   open,
@@ -50,7 +50,11 @@ export const CreateRoute = ({
           >
             Add Route to {serviceName}
           </Typography>
-          <RouteEditor content={routeData} textFields={ROUTE_TEXT_FIELDS} />
+          <RouteEditor
+            content={routeData}
+            textFields={ROUTE_TEXT_FIELDS}
+            param={false}
+          />
         </ModalDialog>
       </ModalOverflow>
     </Modal>

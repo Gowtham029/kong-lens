@@ -67,12 +67,15 @@ const ServiceDetail = (): JSX.Element => {
   const loadingData = useSelector((state: any) => state.loadingData);
 
   React.useEffect(() => {
-    if (!param) {
+    const put = (): void => {
       dispatch(getCurrentServiceData(id as string));
       dispatch(getCurrentServiceRouteData(id as string));
+    };
+    if (!param) {
+      put();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch]);
+  }, []);
 
   const renderComponent = {
     'Service Details': (
@@ -81,6 +84,7 @@ const ServiceDetail = (): JSX.Element => {
     Routes: <Routes nested />,
     Plugins: <Plugins nested />,
   };
+
   return (
     <Box sx={{ width: '1250px', margin: 'auto' }}>
       <SnackBarAlert

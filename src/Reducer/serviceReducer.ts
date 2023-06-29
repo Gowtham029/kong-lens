@@ -44,6 +44,11 @@ const currentServiceRouteData = (state = [], action: any) => {
       return state;
     case ACTION_TYPES.SET_CURRENT_SERVICE_ROUTE_DATA:
       return action.payload;
+    case ACTION_TYPES.ADD_CURRENT_SERIVE_ROUTE_DATA:
+      return [...state, action.payload];
+    case ACTION_TYPES.CONFIRM_ROUTE_DELETE:
+      state.splice(action.index, 1);
+      return [...state];
     default:
       return state;
   }
