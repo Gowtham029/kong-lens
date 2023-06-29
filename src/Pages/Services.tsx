@@ -12,7 +12,6 @@ import useAwaitableComponent from 'use-awaitable-component';
 import { useNavigate } from 'react-router-dom';
 import { Delete } from '@mui/icons-material';
 import { useSelector, useDispatch } from 'react-redux';
-import { CircularProgress } from '@mui/joy';
 import PageHeader from '../Components/Features/PageHeader';
 import DialogModal from '../Components/Features/DialogModal';
 import { ServiceDetails } from '../interfaces';
@@ -173,7 +172,10 @@ const Services = (): JSX.Element => {
         // eslint-disable-next-line react/no-unstable-nested-components
         Cell: ({ row }) => (
           <div style={{ display: 'flex' }}>
-            {new Date(row.original.created_at).toLocaleDateString('en-US')}
+            {new Date(row.original.created_at * 1000)
+              .toISOString()
+              .slice(0, 19)
+              .replace('T', ' ')}
           </div>
         ),
       },

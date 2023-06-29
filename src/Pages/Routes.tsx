@@ -153,7 +153,9 @@ const Routes = ({ nested }: PageTypeProps): JSX.Element => {
         // eslint-disable-next-line react/no-unstable-nested-components
         Cell: ({ row }) => (
           <div style={{ display: 'flex' }}>
-            {new Date(row.original.created_at).toLocaleDateString('en-US')}
+            {new Date(row.original.created_at * 1000).toLocaleDateString(
+              'en-US'
+            )}
           </div>
         ),
       },
