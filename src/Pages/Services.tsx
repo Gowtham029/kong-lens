@@ -101,7 +101,7 @@ const Services = (): JSX.Element => {
         size: 140,
         muiTableBodyCellProps: ({ cell }) => ({
           onClick: () => {
-            navigate(`/services/${cell.row.original.id}/?newId=false`);
+            navigate(`/services/${cell.row.original.id}?newId=false`);
           },
           sx: {
             cursor: 'pointer',
