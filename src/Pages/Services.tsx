@@ -22,6 +22,7 @@ import { ACTION_TYPES } from '../Shared/actionTypes';
 import { deleteServiceData, getServiceData } from '../Actions/serviceActions';
 import { toastDisable } from '../Actions/toastActions';
 import Spinner from '../Components/Features/spinner/Spinner';
+import { DateTimeFormat } from '../Utils/DateTimeFormatter';
 
 const Services = (): JSX.Element => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -172,10 +173,7 @@ const Services = (): JSX.Element => {
         // eslint-disable-next-line react/no-unstable-nested-components
         Cell: ({ row }) => (
           <div style={{ display: 'flex' }}>
-            {new Date(row.original.created_at * 1000)
-              .toISOString()
-              .slice(0, 19)
-              .replace('T', ' ')}
+            {DateTimeFormat(row.original.created_at)}
           </div>
         ),
       },

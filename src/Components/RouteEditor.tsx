@@ -7,7 +7,7 @@ import { useLocation, useParams } from 'react-router-dom';
 import { Input, Select, Switch, Typography, Option } from '@mui/joy';
 import { TagsInput } from 'react-tag-input-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { API_RESPONSE_SNACK_MESSAGE, PROCESS_TYPE } from '../Shared/constants';
+import { PROCESS_TYPE } from '../Shared/constants';
 import { ACTION_TYPES } from '../Shared/actionTypes';
 import { SnackBarAlert } from './Features/SnackBarAlert';
 import { EditorProps, RouteDetails, toggleProps } from '../interfaces';
@@ -17,6 +17,7 @@ import {
   postCurrentRouteData,
 } from '../Actions/routeActions';
 import Spinner from './Features/spinner/Spinner';
+import { processRouteData } from '../Utils/ProcessData';
 
 const StyledButton = styled(Button)({
   backgroundColor: '#1ABB9C',
@@ -65,62 +66,6 @@ function ToggleComponent({ yes, onChange }: toggleProps): JSX.Element {
 const RouteEditor = ({ content, textFields }: EditorProps): JSX.Element => {
   const dispatch = useDispatch();
 
-  const processData = (
-    data: RouteDetails,
-    processType: string
-  ): RouteDetails => {
-    if (processType === PROCESS_TYPE.PRE_PROCESS) {
-      const keyList = Object.keys(data);
-      for (let i = 0; i < keyList.length; i += 1) {
-        const key = keyList[i];
-        if (
-          data[key as keyof typeof data] === null ||
-          data[key as keyof typeof data] === undefined
-        )
-          data = { ...data, [key]: '' };
-      }
-      if (Object.keys(data.headers).length === 0) {
-        data = { ...data, headers: [] };
-      } else if (data.headers) {
-        const headers = [];
-        const keys = Object.keys(data.headers);
-        for (let j = 0; j < keys.length; j += 1) {
-          headers.push(keys[j].concat(`:${data.headers[keys[j]]}`));
-        }
-        data = { ...data, headers };
-      }
-    } else {
-      if (
-        data.protocols.length !== 0 &&
-        data.sources.length === 0 &&
-        data.destinations.length === 0
-      ) {
-        data = { ...data, sources: null, destinations: null };
-      }
-      if (data.headers.length === 0) data = { ...data, headers: {} };
-      else {
-        try {
-          const header = data.headers;
-          const res: any = {};
-          for (let i = 0; i < header.length; i += 1) {
-            const current = header[i].split(':');
-            res[current[0]] = current[1].split(',');
-          }
-          data = { ...data, headers: res };
-        } catch (error) {
-          dispatch({
-            type: ACTION_TYPES.TOAST_NOTIFICATION,
-            payload: {
-              message: API_RESPONSE_SNACK_MESSAGE.incorrectHeader,
-              severity: 'error',
-            },
-          });
-        }
-      }
-    }
-    return data;
-  };
-
   const { id } = useParams();
 
   const { search } = useLocation();
@@ -137,7 +82,7 @@ const RouteEditor = ({ content, textFields }: EditorProps): JSX.Element => {
 
   const loadingData = useSelector((state: any) => state.loadingData);
 
-  content = processData(content, PROCESS_TYPE.PRE_PROCESS);
+  content = processRouteData(content, PROCESS_TYPE.PRE_PROCESS, dispatch);
 
   const [formData, setFormData] = React.useState(content);
 
@@ -157,7 +102,9 @@ const RouteEditor = ({ content, textFields }: EditorProps): JSX.Element => {
   };
 
   const handleOnCancel = (): void => {
-    setFormData(processData(currentRouteData, PROCESS_TYPE.PRE_PROCESS));
+    setFormData(
+      processRouteData(currentRouteData, PROCESS_TYPE.PRE_PROCESS, dispatch)
+    );
     dispatch({
       type: ACTION_TYPES.SET_CURRENT_ROUTE_DATA,
       payload: currentRouteData,
@@ -195,9 +142,10 @@ const RouteEditor = ({ content, textFields }: EditorProps): JSX.Element => {
 
   const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const request: RouteDetails = processData(
+    const request: RouteDetails = processRouteData(
       formData,
-      PROCESS_TYPE.POST_PROCESS
+      PROCESS_TYPE.POST_PROCESS,
+      dispatch
     );
     if (!param) {
       dispatch(patchCurrentRouteData(request, id as string));

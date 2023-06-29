@@ -24,6 +24,7 @@ import { deleteRouteData, getRouteData } from '../Actions/routeActions';
 import { toastDisable } from '../Actions/toastActions';
 import { ROUTE_DETAILS_INTERFACE } from '../Shared/constants';
 import Spinner from '../Components/Features/spinner/Spinner';
+import { DateTimeFormat } from '../Utils/DateTimeFormatter';
 
 const Routes = ({ nested }: PageTypeProps): JSX.Element => {
   const dispatch = useDispatch();
@@ -147,19 +148,6 @@ const Routes = ({ nested }: PageTypeProps): JSX.Element => {
         }),
       },
       {
-        accessorKey: 'created_at',
-        header: 'Created',
-        size: 80,
-        // eslint-disable-next-line react/no-unstable-nested-components
-        Cell: ({ row }) => (
-          <div style={{ display: 'flex' }}>
-            {new Date(row.original.created_at * 1000).toLocaleDateString(
-              'en-US'
-            )}
-          </div>
-        ),
-      },
-      {
         accessorKey: 'hosts',
         header: 'Host',
         // eslint-disable-next-line react/no-unstable-nested-components
@@ -225,6 +213,17 @@ const Routes = ({ nested }: PageTypeProps): JSX.Element => {
         size: 80,
         enableHiding: true,
       },
+      {
+        accessorKey: 'created_at',
+        header: 'Created',
+        size: 80,
+        // eslint-disable-next-line react/no-unstable-nested-components
+        Cell: ({ row }) => (
+          <div style={{ display: 'flex' }}>
+            {DateTimeFormat(row.original.created_at)}
+          </div>
+        ),
+      },
     ],
     [navigate, nested]
   );
@@ -270,6 +269,8 @@ const Routes = ({ nested }: PageTypeProps): JSX.Element => {
             columnVisibility: {
               id: false,
               'service.name': !nested,
+              protocols: false,
+              regex_priority: false,
             },
           }}
           renderRowActions={({ row }) => (
