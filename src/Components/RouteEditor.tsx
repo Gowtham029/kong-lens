@@ -1,23 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-param-reassign */
 import * as React from 'react';
-import { Box, Button, Stack, styled, InputLabel } from '@mui/material';
-
-import { useLocation, useParams } from 'react-router-dom';
-import { Input, Select, Switch, Typography, Option } from '@mui/joy';
+import { Box, Button, InputLabel, Stack, styled } from '@mui/material';
+import { Input, Select, Option } from '@mui/joy';
+import { useParams } from 'react-router-dom';
 import { TagsInput } from 'react-tag-input-component';
 import { useDispatch, useSelector } from 'react-redux';
 import { PROCESS_TYPE } from '../Shared/constants';
 import { ACTION_TYPES } from '../Shared/actionTypes';
 import { SnackBarAlert } from './Features/SnackBarAlert';
-import { EditorProps, RouteDetails, toggleProps } from '../interfaces';
+import { RouteDetails, RouteEditorProps } from '../interfaces';
 import { toastDisable } from '../Actions/toastActions';
+import Spinner from './Features/spinner/Spinner';
+import { processRouteData } from '../Utils/ProcessData';
 import {
   patchCurrentRouteData,
   postCurrentRouteData,
 } from '../Actions/routeActions';
-import Spinner from './Features/spinner/Spinner';
-import { processRouteData } from '../Utils/ProcessData';
+import { ToggleComponent } from './Features/ToggleComponent';
 
 const StyledButton = styled(Button)({
   backgroundColor: '#1ABB9C',
@@ -27,64 +27,34 @@ const StyledButton = styled(Button)({
   },
 });
 
-function ToggleComponent({ yes, onChange }: toggleProps): JSX.Element {
-  const [checked, setChecked] = React.useState<boolean>(yes);
-  return (
-    <Switch
-      checked={checked}
-      onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = event.target.checked;
-        setChecked(value);
-        onChange();
-      }}
-      slotProps={{
-        track: {
-          children: (
-            <>
-              <Typography component="span" level="inherit" sx={{ ml: '4px' }}>
-                YES
-              </Typography>
-              <Typography component="span" level="inherit" sx={{ mr: '8px' }}>
-                NO
-              </Typography>
-            </>
-          ),
-        },
-      }}
-      sx={{
-        '--Switch-thumbSize': '27px',
-        '--Switch-trackWidth': '64px',
-        '--Switch-trackHeight': '31px',
-        display: 'flex',
-        justifyContent: 'flex-start',
-        margin: '8px 0px',
-      }}
-    />
-  );
-}
-
-const RouteEditor = ({ content, textFields }: EditorProps): JSX.Element => {
-  const dispatch = useDispatch();
-
+const RouteEditor = ({
+  content,
+  textFields,
+  param,
+}: RouteEditorProps): JSX.Element => {
   const { id } = useParams();
 
-  const { search } = useLocation();
+  const dispatch = useDispatch();
 
-  const query = new URLSearchParams(search);
+  content = processRouteData(content, PROCESS_TYPE.PRE_PROCESS, dispatch);
 
-  const param = query.get('newId') === 'true';
+  const loadingData = useSelector((state: any) => state.loadingData);
 
   const { currentRouteData } = useSelector((state: any) => state.routeReducer);
+
+  const [formData, setFormData] = React.useState<RouteDetails>(content);
 
   const { isOpen, toastMessage } = useSelector(
     (state: any) => state.toastReducer
   );
 
-  const loadingData = useSelector((state: any) => state.loadingData);
-
-  content = processRouteData(content, PROCESS_TYPE.PRE_PROCESS, dispatch);
-
-  const [formData, setFormData] = React.useState(content);
+  const handleOnCancel = (): void => {
+    setFormData(currentRouteData);
+    dispatch({
+      type: ACTION_TYPES.SET_CURRENT_ROUTE_DATA,
+      payload: currentRouteData,
+    });
+  };
 
   const handleOnChange = (e: {
     preventDefault: any;
@@ -96,18 +66,8 @@ const RouteEditor = ({ content, textFields }: EditorProps): JSX.Element => {
       ...formData,
       [name]:
         type === 'number'
-          ? parseInt(value === undefined ? 0 : value, 10)
+          ? parseInt(value === undefined || Number.isNaN(value) ? 0 : value, 10)
           : value,
-    });
-  };
-
-  const handleOnCancel = (): void => {
-    setFormData(
-      processRouteData(currentRouteData, PROCESS_TYPE.PRE_PROCESS, dispatch)
-    );
-    dispatch({
-      type: ACTION_TYPES.SET_CURRENT_ROUTE_DATA,
-      payload: currentRouteData,
     });
   };
 
@@ -147,7 +107,7 @@ const RouteEditor = ({ content, textFields }: EditorProps): JSX.Element => {
       PROCESS_TYPE.POST_PROCESS,
       dispatch
     );
-    if (!param) {
+    if (param) {
       dispatch(patchCurrentRouteData(request, id as string));
     } else {
       request.service = {
@@ -202,7 +162,7 @@ const RouteEditor = ({ content, textFields }: EditorProps): JSX.Element => {
                     </div>
                   )}
                   {text.type === 'list' && (
-                    <div style={{ maxWidth: 700 }}>
+                    <div style={{ maxWidth: 800 }}>
                       <TagsInput
                         value={formData[text.key as keyof typeof content]}
                         onChange={(e) => {
@@ -213,7 +173,7 @@ const RouteEditor = ({ content, textFields }: EditorProps): JSX.Element => {
                   )}
                   {text.type === 'dropdown' && (
                     <Select
-                      sx={{ maxWidth: 700 }}
+                      sx={{ maxWidth: 800 }}
                       defaultValue={formData[text.key as keyof typeof content]}
                       value={formData[text.key as keyof typeof content]}
                       onChange={handlePathHandling}
@@ -227,16 +187,16 @@ const RouteEditor = ({ content, textFields }: EditorProps): JSX.Element => {
                       style={{
                         display: 'flex',
                         flexDirection: 'column',
-                        maxWidth: 700,
+                        maxWidth: 800,
                       }}
                     >
                       <Input
                         sx={{
                           borderRadius: '5px',
                         }}
+                        type={text.type}
                         name={text.key}
                         value={formData[text.key as keyof typeof content]}
-                        disabled={text.key === 'id'}
                         onChange={handleOnChange}
                       />
                     </div>
@@ -245,7 +205,7 @@ const RouteEditor = ({ content, textFields }: EditorProps): JSX.Element => {
                     style={{
                       fontSize: '13px',
                       color: '#B2B2B2',
-                      maxWidth: 700,
+                      maxWidth: 800,
                       display: 'flex',
                     }}
                   >

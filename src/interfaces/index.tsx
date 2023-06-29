@@ -100,9 +100,10 @@ export type ServiceDetails = {
   updated_at?: any;
 };
 
-export type EditorProps = {
+export type RouteEditorProps = {
   content: RouteDetails;
   textFields: keyValueType[];
+  param: boolean;
 };
 
 export type ServiceEditorProps = {

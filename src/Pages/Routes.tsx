@@ -68,7 +68,9 @@ const Routes = ({ nested }: PageTypeProps): JSX.Element => {
 
   const handleDeleteRow = useCallback(
     (row: MRT_Row<RouteDetails>) => {
-      if (!deleteRow) return;
+      if (!deleteRow) {
+        return;
+      }
       // send api delete request here, then refetch or update local table data for re-render
       dispatch(deleteRouteData(row.original.id, row.index));
     },
@@ -107,7 +109,7 @@ const Routes = ({ nested }: PageTypeProps): JSX.Element => {
         size: 140,
         muiTableBodyCellProps: ({ cell }) => ({
           onClick: () => {
-            navigate(`/routes/${cell.row.original.id}?newId=false`);
+            navigate(`/routes/${cell.row.original.id}`);
           },
           sx: {
             cursor: 'pointer',
@@ -348,6 +350,10 @@ const Routes = ({ nested }: PageTypeProps): JSX.Element => {
         open={isRouteOpen}
         onClose={() => {
           dispatch({ type: ACTION_TYPES.CLOSE_ROUTE_MODAL });
+          dispatch({
+            type: ACTION_TYPES.SET_CURRENT_ROUTE_DATA,
+            payload: ROUTE_DETAILS_INTERFACE,
+          });
         }}
         serviceName={currentServiceData.name}
       />
