@@ -22,7 +22,6 @@ export interface RouteDetails {
   tags: any;
   path_handling: any;
   service: any;
-  service_name: any;
   paths: any;
   methods: any;
   sources: any;
@@ -37,8 +36,8 @@ export interface RouteDetails {
   id?: any;
   hosts: any;
   name: any;
-  created_at?: Date | string | number;
-  updated_at?: Date | string | number;
+  created_at?: any;
+  updated_at?: any;
 }
 
 export type Menus = {
@@ -86,7 +85,6 @@ export type keyValueType = {
 export type ServiceDetails = {
   id: any;
   name: any;
-  description: any;
   tags: any;
   retries: any;
   protocol: any;
@@ -98,18 +96,17 @@ export type ServiceDetails = {
   read_timeout: any;
   client_certificate: any;
   ca_certificates?: any;
-  created_at?: Date | string | number;
-  updated_at?: Date | string | number;
+  created_at?: any;
+  updated_at?: any;
 };
 
 export type EditorProps = {
   content: RouteDetails;
   textFields: keyValueType[];
-  param: boolean;
 };
 
 export type ServiceEditorProps = {
-  service: ServiceDetails;
+  content: ServiceDetails;
   textFields: keyValueType[];
 };
 
@@ -170,10 +167,11 @@ export type TagProps = {
 };
 
 export type PageTypeProps = {
-  type: string;
+  nested: boolean;
 };
 
 export type CreateRouteProps = {
   open: boolean;
   onClose: VoidFunction;
+  serviceName: string;
 };
