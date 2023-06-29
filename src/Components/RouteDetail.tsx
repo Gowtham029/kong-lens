@@ -53,11 +53,7 @@ const RouteDetail = (): JSX.Element => {
   const loadingData = useSelector((state: any) => state.loadingData);
 
   React.useEffect(() => {
-    const put = (): void => {
-      dispatch(getCurrentRouteData(id as string));
-    };
-    put();
-
+    dispatch(getCurrentRouteData(id as string));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
