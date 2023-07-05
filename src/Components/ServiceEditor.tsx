@@ -1,33 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-param-reassign */
 import * as React from 'react';
-import {
-  Box,
-  Button,
-  CircularProgress,
-  InputLabel,
-  Stack,
-  styled,
-} from '@mui/material';
+import { Box, Button, InputLabel, Stack, styled } from '@mui/material';
 import Input from '@mui/joy/Input';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { TagsInput } from 'react-tag-input-component';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  BASE_API_URL,
-  API_RESPONSE_SNACK_MESSAGE,
-  ACTION_TYPES,
-  PROCESS_TYPE,
-  SERVICE_DETAILS_INTERFACE,
-} from '../Shared/constants';
-import { POST, PATCH } from '../Helpers/ApiHelpers';
+import { PROCESS_TYPE } from '../Shared/constants';
+import { ACTION_TYPES } from '../Shared/actionTypes';
 import { SnackBarAlert } from './Features/SnackBarAlert';
+import { ServiceDetails, ServiceEditorProps } from '../interfaces';
 import {
-  ServiceDetails,
-  ServiceEditorProps,
-  snackMessageProp,
-} from '../interfaces';
-import { updateValue } from '../Reducer/StoreReducer';
+  patchCurrentServiceData,
+  postCurrentServiceData,
+} from '../Actions/serviceActions';
+import { toastDisable } from '../Actions/toastActions';
+import Spinner from './Features/spinner/Spinner';
+import { processServiceData } from '../Utils/ProcessData';
 
 const StyledButton = styled(Button)({
   backgroundColor: '#1ABB9C',
@@ -38,10 +27,10 @@ const StyledButton = styled(Button)({
 });
 
 const ServiceEditor = ({
-  service,
+  content,
   textFields,
 }: ServiceEditorProps): JSX.Element => {
-  let { id } = useParams();
+  const { id } = useParams();
 
   const navigate = useNavigate();
 
@@ -49,68 +38,30 @@ const ServiceEditor = ({
 
   const query = new URLSearchParams(search);
 
-  const paramValue = query.get('newId') === 'true';
+  const param = query.get('newId') === 'true';
 
-  // to avoid null or undefined inputs in the text fields and send null values for non updated string values
-  const processData = (
-    data: ServiceDetails,
-    processType: string
-  ): ServiceDetails => {
-    const keyList = Object.keys(data);
-    for (let i = 0; i < keyList.length; i += 1) {
-      const key = keyList[i];
-      if (
-        (data[key as keyof ServiceDetails] === null ||
-          data[key as keyof ServiceDetails] === undefined ||
-          data[key as keyof ServiceDetails] === '') &&
-        processType === PROCESS_TYPE.PRE_PROCESS
-      ) {
-        data = { ...data, [key]: '' };
-      } else if (data[key as keyof ServiceDetails] === '')
-        data = { ...data, [key]: null };
-    }
-    return data;
-  };
+  content = processServiceData(content, PROCESS_TYPE.PRE_PROCESS);
 
-  let serviceData = useSelector(
-    (state: { reducer: { serviceData: ServiceDetails } }) =>
-      processData(state.reducer.serviceData, PROCESS_TYPE.PRE_PROCESS)
+  const loadingData = useSelector((state: any) => state.loadingData);
+
+  const { currentServiceData } = useSelector(
+    (state: any) => state.serviceReducer
   );
 
-  if (paramValue) serviceData = SERVICE_DETAILS_INTERFACE;
+  const [formData, setFormData] = React.useState(content);
 
-  const [loading, setLoading] = React.useState(false);
-
-  const openSnackBar = useSelector(
-    (state: { reducer: { openSnackBar: boolean } }) =>
-      state.reducer.openSnackBar
-  );
-
-  const snack = useSelector(
-    (state: { reducer: { snackBar: snackMessageProp } }) =>
-      state.reducer.snackBar
+  const { isOpen, toastMessage } = useSelector(
+    (state: any) => state.toastReducer
   );
 
   const dispatch = useDispatch();
 
-  const updateFlagReducer = (type: string, value: boolean): void => {
-    dispatch(updateValue({ type, value }));
-  };
-
-  const updateSnackMessage = (message: string, severity: string): void => {
-    dispatch(
-      updateValue({
-        type: ACTION_TYPES.SET_SNACK_BAR_MESSAGE,
-        message,
-        severity,
-      })
-    );
-  };
-
   const handleOnCancel = (): void => {
-    dispatch(
-      updateValue({ type: ACTION_TYPES.UPDATE_SERVICE_DATA, data: service })
-    );
+    setFormData(currentServiceData);
+    dispatch({
+      type: ACTION_TYPES.SET_CURRENT_SERVICE_DATA,
+      payload: currentServiceData,
+    });
   };
 
   const handleOnChange = (e: {
@@ -119,112 +70,54 @@ const ServiceEditor = ({
   }): void => {
     e.preventDefault;
     const { name, type, value } = e.target;
-    dispatch(
-      updateValue({
-        type: ACTION_TYPES.UPDATE_SERVICE_DATA_VALUES,
-        key: name,
-        value: type === 'number' ? parseInt(value, 10) : value,
-      })
-    );
+    setFormData({
+      ...formData,
+      [name]:
+        type === 'number'
+          ? parseInt(value === undefined ? 0 : value, 10)
+          : value,
+    });
   };
 
   const handleListChange = (
     key: keyof ServiceDetails,
     value: string[]
   ): void => {
-    dispatch(
-      updateValue({
-        type: ACTION_TYPES.UPDATE_SERVICE_DATA_VALUES,
-        key,
-        value,
-      })
-    );
+    setFormData({
+      ...formData,
+      [key]: value,
+    });
   };
 
   const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    const postService = async (): Promise<any> => {
-      if (paramValue) {
-        const request = serviceData;
-        delete request.id;
-        delete request.description;
-        if (request.ca_certificates === '') request.ca_certificates = null;
-        if (request.client_certificate === '')
-          request.client_certificate = null;
-        setLoading(true);
-        await POST({
-          url: `${BASE_API_URL}/services`,
-          body: request,
-          headers: { 'Access-Control-Allow-Origin': '*' },
-        })
-          .then((response) => {
-            id = response.data.id;
-            if (response.status === 201) {
-              navigate(`../services/${id}/?newId=false`, { replace: true });
-              updateSnackMessage(
-                API_RESPONSE_SNACK_MESSAGE.createdNewService,
-                'success'
-              );
-            }
-          })
-          .catch((err) => {
-            updateSnackMessage(
-              err.response
-                ? err.response.data.message
-                : API_RESPONSE_SNACK_MESSAGE.unableToSaveData,
-              'error'
-            );
-          });
-        setLoading(false);
-      } else {
-        setLoading(true);
-        const request: ServiceDetails = processData(
-          serviceData,
-          PROCESS_TYPE.POST_PROCESS
-        );
-        await PATCH({
-          url: `${BASE_API_URL}/services/${id}`,
-          body: request,
-          headers: { 'Access-Control-Allow-Origin': '*' },
-        })
-          .then((response) => {
-            if (response.status === 200) {
-              updateSnackMessage(
-                API_RESPONSE_SNACK_MESSAGE.modifiedExistingService,
-                'success'
-              );
-            }
-          })
-          .catch((err) => {
-            updateSnackMessage(
-              err.response
-                ? err.response.data.message
-                : API_RESPONSE_SNACK_MESSAGE.unableToSaveData,
-              'error'
-            );
-          });
-        setLoading(false);
-      }
-    };
-    postService();
-    updateFlagReducer(ACTION_TYPES.OPEN_SNACK_BAR, true);
+    if (param) {
+      const request = formData;
+      delete request.id;
+      if (request.ca_certificates === '') request.ca_certificates = null;
+      dispatch(postCurrentServiceData(request, navigate));
+    } else {
+      const request: ServiceDetails = processServiceData(
+        formData,
+        PROCESS_TYPE.POST_PROCESS
+      );
+      dispatch(patchCurrentServiceData(request, id as string));
+    }
   };
 
   return (
     <>
       <SnackBarAlert
-        open={openSnackBar}
-        message={snack.message}
-        severity={snack.severity}
+        open={isOpen}
+        message={toastMessage.message}
+        severity={toastMessage.severity}
         handleClose={() => {
-          updateFlagReducer(ACTION_TYPES.OPEN_SNACK_BAR, false);
+          dispatch(toastDisable());
         }}
       />
       <br />
-      {loading ? (
-        <Box sx={{ display: 'flex', height: '500px', alignItems: 'center' }}>
-          <CircularProgress sx={{ margin: 'auto', color: '#1ABB9C' }} />
-        </Box>
+      {loadingData ? (
+        <Spinner />
       ) : (
         <Box
           sx={{
@@ -252,20 +145,20 @@ const ServiceEditor = ({
                   </InputLabel>
                   {text.type === 'list' && (
                     <TagsInput
-                      value={serviceData[text.key as keyof ServiceDetails]}
+                      value={formData[text.key as keyof ServiceDetails]}
                       onChange={(e) => {
                         handleListChange(text.key as keyof ServiceDetails, e);
                       }}
                     />
                   )}
-                  {text.type !== 'list' && (
+                  {(text.type === 'number' || text.type === 'text') && (
                     <Input
                       sx={{
                         borderRadius: '5px',
                       }}
                       type={text.type}
                       name={text.key}
-                      value={serviceData[text.key as keyof ServiceDetails]}
+                      value={formData[text.key as keyof ServiceDetails]}
                       onChange={handleOnChange}
                     />
                   )}
