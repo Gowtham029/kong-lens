@@ -15,20 +15,20 @@ import { IconInfoCircle } from '@tabler/icons-react';
 import AltRouteIcon from '@mui/icons-material/AltRoute';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import { useDispatch, useSelector } from 'react-redux';
-import PageHeader from './Features/PageHeader';
+import PageHeader from '../Features/PageHeader';
 import ServiceEditor from './ServiceEditor';
-import MiniPageHeader from './Features/MiniPageHeader';
-import { SERVICE_TEXT_FIELDS } from '../Shared/constants';
-import { navBarProps } from '../interfaces';
-import Routes from '../Pages/Routes';
-import Plugins from '../Pages/Plugins';
-import { SnackBarAlert } from './Features/SnackBarAlert';
+import MiniPageHeader from '../Features/MiniPageHeader';
+import { SERVICE_TEXT_FIELDS } from '../../Shared/constants';
+import { navBarProps } from '../../interfaces';
+import Routes from '../../Pages/Routes';
+import Plugins from '../../Pages/Plugins';
+import { SnackBarAlert } from '../Features/SnackBarAlert';
 import {
   getCurrentServiceData,
   getCurrentServiceRouteData,
-} from '../Actions/serviceActions';
-import { toastDisable } from '../Actions/toastActions';
-import Spinner from './Features/spinner/Spinner';
+} from '../../Actions/serviceActions';
+import { toastDisable } from '../../Actions/toastActions';
+import Spinner from '../Features/spinner/Spinner';
 
 const ServiceDetail = (): JSX.Element => {
   const { id } = useParams();

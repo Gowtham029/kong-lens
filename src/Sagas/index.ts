@@ -16,9 +16,18 @@ import {
   watchPatchRouteDataSaga,
   watchPostRouteDataSaga,
 } from './routeSagas';
+import { watchGetLoginDataSaga } from './loginSagas';
+import {
+  watchDeleteConsumerDataSaga,
+  watchGetConsumerDataSaga,
+  watchGetCurrentConsumerDataSaga,
+  watchPatchConsumerDataSaga,
+  watchPostConsumerDataSaga,
+} from './consumerSagas';
 
 export default function* combinedSaga() {
   yield all([
+    fork(watchGetLoginDataSaga),
     fork(watchGetServiceDataSaga),
     fork(watchDeleteServiceDataSaga),
     fork(watchGetRouteDataSaga),
@@ -30,5 +39,10 @@ export default function* combinedSaga() {
     fork(watchGetCurrentRouteDataSaga),
     fork(watchPostRouteDataSaga),
     fork(watchGetServiceRouteDataSaga),
+    fork(watchGetConsumerDataSaga),
+    fork(watchDeleteConsumerDataSaga),
+    fork(watchGetCurrentConsumerDataSaga),
+    fork(watchPatchConsumerDataSaga),
+    fork(watchPostConsumerDataSaga),
   ]);
 }

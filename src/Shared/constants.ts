@@ -2,6 +2,9 @@ import { keyValueType } from '../interfaces';
 
 export const BASE_API_URL: string =
   process.env.API_URL || 'http://localhost:8001';
+
+export const AUTH_API_URL = 'http://localhost:9090';
+
 export const ROUTE_TEXT_FIELDS: keyValueType[] = [
   { key: 'name', value: 'The name of the Route.', type: 'text' },
 
@@ -151,6 +154,22 @@ export const SERVICE_TEXT_FIELDS: keyValueType[] = [
   },
 ];
 
+export const CONSUMER_TEXT_FIELDS: keyValueType[] = [
+  {
+    key: 'username',
+    value:
+      'The username of the consumer. You must send either this field or custom_id with the request.',
+    type: 'text',
+  },
+
+  {
+    key: 'custom_id',
+    value:
+      'Field for storing an existing ID for the consumer, useful for mapping Kong with users in your existing database. You must send either this field or username with the request.',
+    type: 'text',
+  },
+  { key: 'tags', value: 'Optionally add tags to the consumer', type: 'list' },
+];
 export const SERVICE_DETAILS_INTERFACE = {
   id: '',
   name: '',
@@ -186,6 +205,12 @@ export const ROUTE_DETAILS_INTERFACE = {
   service: {},
 };
 
+export const CONSUMER_DETAILS_INTERFACE = {
+  username: '',
+  custom_id: '',
+  tags: [],
+};
+
 export const API_RESPONSE_SNACK_MESSAGE = {
   unableToFetchData: 'Unable to Fetch data, Please try again!',
   couldNotModifyData: 'Could not able to modify data!',
@@ -199,6 +224,9 @@ export const API_RESPONSE_SNACK_MESSAGE = {
   unableToDelete: 'Unable to delete data, Please try again!',
   fetchedData: 'Successfully fetched data!',
   incorrectHeader: 'schema violation (headers: expected a map)',
+  errorWhileLogin: 'Please try again!',
+  deletedConsumer: 'Successfully deleted the Consumer!',
+  modifiedConumer: 'Successfully modified the consumer details!',
 };
 
 export const PROCESS_TYPE = {

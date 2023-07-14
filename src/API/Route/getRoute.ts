@@ -1,22 +1,21 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { call, put } from 'redux-saga/effects';
-import { GET } from '../Helpers/ApiHelpers';
-import { API_RESPONSE_SNACK_MESSAGE, BASE_API_URL } from '../Shared/constants';
-import { ACTION_TYPES } from '../Shared/actionTypes';
+import { GET } from '../../Helpers/ApiHelpers';
+import {
+  API_RESPONSE_SNACK_MESSAGE,
+  BASE_API_URL,
+} from '../../Shared/constants';
+import { ACTION_TYPES } from '../../Shared/actionTypes';
 
-export function* getServiceRoute(action: any): any {
+export function* getRoute(action: any): any {
   try {
     yield put({ type: ACTION_TYPES.SET_LOADER_TRUE });
     const { data }: any = yield call(GET, {
-      url: `${BASE_API_URL}/services/${action.payload}/routes`,
+      url: `${BASE_API_URL}/routes/${action.payload}`,
       headers: { 'Access-Control-Allow-Origin': '*' },
     });
-    yield put({
-      type: ACTION_TYPES.SET_CURRENT_SERVICE_ROUTE_DATA,
-      payload: data.data,
-    });
-    yield put({ type: ACTION_TYPES.SET_ROUTE_RAW_VIEW, payload: data.data });
+    yield put({ type: ACTION_TYPES.SET_CURRENT_ROUTE_DATA, payload: data });
     yield put({
       type: ACTION_TYPES.TOAST_NOTIFICATION,
       payload: {
@@ -35,6 +34,7 @@ export function* getServiceRoute(action: any): any {
         severity: 'error',
       },
     });
+  } finally {
     yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
   }
 }

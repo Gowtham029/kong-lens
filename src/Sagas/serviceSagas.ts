@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { takeEvery, takeLatest } from 'redux-saga/effects';
-import { getServices } from '../API/getServices';
+import { getServices } from '../API/Service/getServices';
 import { ACTION_TYPES } from '../Shared/actionTypes';
-import { deleteService } from '../API/deleteService';
-import { getService } from '../API/getService';
-import { postService } from '../API/postService';
-import { patchService } from '../API/patchService';
-import { getServiceRoute } from '../API/getServiceRoute';
+import { deleteService } from '../API/Service/deleteService';
+import { getService } from '../API/Service/getService';
+import { postService } from '../API/Service/postService';
+import { patchService } from '../API/Service/patchService';
+import { getServiceRoute } from '../API/Service/getServiceRoute';
 
 export function* watchGetServiceDataSaga(): any {
   yield takeLatest([ACTION_TYPES.GET_SERVICE_DATA], getServices);

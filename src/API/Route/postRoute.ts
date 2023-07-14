@@ -1,30 +1,46 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { call, delay, put } from 'redux-saga/effects';
-import { POST } from '../Helpers/ApiHelpers';
-import { API_RESPONSE_SNACK_MESSAGE, BASE_API_URL } from '../Shared/constants';
-import { ACTION_TYPES } from '../Shared/actionTypes';
+import { call, put } from 'redux-saga/effects';
+import { POST } from '../../Helpers/ApiHelpers';
+import {
+  API_RESPONSE_SNACK_MESSAGE,
+  BASE_API_URL,
+} from '../../Shared/constants';
+import { ACTION_TYPES } from '../../Shared/actionTypes';
 
-export function* postService(action: any): any {
+export function* postRoute(action: any): any {
   try {
     yield put({ type: ACTION_TYPES.SET_LOADER_TRUE });
     const { data } = yield call(POST, {
-      url: `${BASE_API_URL}/services/`,
+      url: `${BASE_API_URL}/routes/`,
       headers: { 'Access-Control-Allow-Origin': '*' },
       body: action.payload,
     });
-    yield put({ type: ACTION_TYPES.SET_CURRENT_SERVICE_DATA, payload: data });
-    yield put({ type: ACTION_TYPES.ADD_SERIVCE_DATA, payload: data });
-    action.navigate(`../services/${data.id}/?newId=false`, { replace: true });
     yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
+    yield put({ type: ACTION_TYPES.CLOSE_ROUTE_MODAL });
+    yield put({
+      type: ACTION_TYPES.ADD_CURRENT_SERIVE_ROUTE_DATA,
+      payload: data,
+    });
+    yield put({
+      type: ACTION_TYPES.HANDLE_ROUTE_RAW_VIEW,
+      payload: {
+        key: data.id,
+        value: false,
+      },
+    });
     yield put({
       type: ACTION_TYPES.TOAST_NOTIFICATION,
       payload: {
-        message: API_RESPONSE_SNACK_MESSAGE.createdNewService,
+        message: API_RESPONSE_SNACK_MESSAGE.createdNewRoute,
         severity: 'success',
       },
     });
   } catch (error: any) {
+    yield put({
+      type: ACTION_TYPES.SET_CURRENT_ROUTE_DATA,
+      payload: action.payload,
+    });
     yield put({
       type: ACTION_TYPES.TOAST_NOTIFICATION,
       payload: {
@@ -34,6 +50,7 @@ export function* postService(action: any): any {
         severity: 'error',
       },
     });
+  } finally {
     yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
   }
 }

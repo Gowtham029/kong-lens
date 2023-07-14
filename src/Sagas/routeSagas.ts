@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { takeEvery, takeLatest } from 'redux-saga/effects';
-import { getRoutes } from '../API/getRoutes';
-import { deleteRoute } from '../API/deleteRoute';
-import { patchRoute } from '../API/patchRoute';
-import { getRoute } from '../API/getRoute';
-import { postRoute } from '../API/postRoute';
+import { takeLatest } from 'redux-saga/effects';
+import { getRoutes } from '../API/Route/getRoutes';
+import { deleteRoute } from '../API/Route/deleteRoute';
+import { patchRoute } from '../API/Route/patchRoute';
+import { getRoute } from '../API/Route/getRoute';
+import { postRoute } from '../API/Route/postRoute';
 import { ACTION_TYPES } from '../Shared/actionTypes';
 
 export function* watchGetRouteDataSaga(): any {
