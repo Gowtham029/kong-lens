@@ -21,6 +21,7 @@ const PageHeaderBox = ({
         justifyContent: 'center',
         display: 'flex',
         flexDirection: 'column',
+        borderRadius: '20px',
       }}
     >
       <h3 style={{ fontSize: '28px', margin: '10px 0 11.5px' }}>{header}</h3>

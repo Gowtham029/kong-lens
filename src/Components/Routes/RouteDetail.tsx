@@ -14,15 +14,15 @@ import { useParams } from 'react-router-dom';
 import { IconInfoCircle } from '@tabler/icons-react';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import { useDispatch, useSelector } from 'react-redux';
-import PageHeader from './Features/PageHeader';
-import MiniPageHeader from './Features/MiniPageHeader';
-import { ROUTE_TEXT_FIELDS } from '../Shared/constants';
-import { navBarProps } from '../interfaces';
-import Plugins from '../Pages/Plugins';
-import { SnackBarAlert } from './Features/SnackBarAlert';
-import { toastDisable } from '../Actions/toastActions';
-import Spinner from './Features/spinner/Spinner';
-import { getCurrentRouteData } from '../Actions/routeActions';
+import PageHeader from '../Features/PageHeader';
+import MiniPageHeader from '../Features/MiniPageHeader';
+import { ROUTE_TEXT_FIELDS } from '../../Shared/constants';
+import { navBarProps } from '../../interfaces';
+import Plugins from '../../Pages/Plugins';
+import { SnackBarAlert } from '../Features/SnackBarAlert';
+import { toastDisable } from '../../Actions/toastActions';
+import Spinner from '../Features/spinner/Spinner';
+import { getCurrentRouteData } from '../../Actions/routeActions';
 import RouteEditor from './RouteEditor';
 
 const RouteDetail = (): JSX.Element => {

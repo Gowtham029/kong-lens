@@ -1,25 +1,28 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { call, delay, put } from 'redux-saga/effects';
-import { PATCH } from '../Helpers/ApiHelpers';
-import { API_RESPONSE_SNACK_MESSAGE, BASE_API_URL } from '../Shared/constants';
-import { ACTION_TYPES } from '../Shared/actionTypes';
+import { call, put } from 'redux-saga/effects';
+import { PATCH } from '../../Helpers/ApiHelpers';
+import {
+  API_RESPONSE_SNACK_MESSAGE,
+  BASE_API_URL,
+} from '../../Shared/constants';
+import { ACTION_TYPES } from '../../Shared/actionTypes';
 
-export function* patchService(action: any): any {
+export function* patchConsumer(action: any): any {
   try {
     yield call(PATCH, {
-      url: `${BASE_API_URL}/services/${action.payload.id}`,
+      url: `${BASE_API_URL}/consumers/${action.payload.id}`,
       headers: { 'Access-Control-Allow-Origin': '*' },
       body: action.payload.data,
     });
     yield put({
-      type: ACTION_TYPES.SET_CURRENT_SERVICE_DATA,
+      type: ACTION_TYPES.SET_CURRENT_CONSUMER_DATA,
       payload: action.payload.data,
     });
     yield put({
       type: ACTION_TYPES.TOAST_NOTIFICATION,
       payload: {
-        message: API_RESPONSE_SNACK_MESSAGE.modifiedExistingService,
+        message: API_RESPONSE_SNACK_MESSAGE.modifiedConumer,
         severity: 'success',
       },
     });

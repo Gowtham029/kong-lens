@@ -23,6 +23,7 @@ import { deleteServiceData, getServiceData } from '../Actions/serviceActions';
 import { toastDisable } from '../Actions/toastActions';
 import Spinner from '../Components/Features/spinner/Spinner';
 import { DateTimeFormat } from '../Utils/DateTimeFormatter';
+import { SERVICE_DETAILS_INTERFACE } from '../Shared/constants';
 
 const Services = (): JSX.Element => {
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
@@ -72,7 +73,7 @@ const Services = (): JSX.Element => {
     row: MRT_Row<ServiceDetails>
   ): Promise<void> => {
     setConfirmDialogOpen(true);
-    const val: unknown = await execute();
+    const val: any = await execute();
     setPromise(val);
     handleDeleteRow(row);
   };
@@ -277,7 +278,11 @@ const Services = (): JSX.Element => {
                 },
               }}
               onClick={() => {
-                navigate(`/services/createService/?newId=true`);
+                navigate(`/services/createService?newId=true`);
+                dispatch({
+                  type: ACTION_TYPES.SET_CURRENT_SERVICE_DATA,
+                  payload: SERVICE_DETAILS_INTERFACE,
+                });
               }}
               variant="contained"
             >

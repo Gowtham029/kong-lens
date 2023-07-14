@@ -6,18 +6,18 @@ import { Input, Select, Option } from '@mui/joy';
 import { useParams } from 'react-router-dom';
 import { TagsInput } from 'react-tag-input-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { PROCESS_TYPE } from '../Shared/constants';
-import { ACTION_TYPES } from '../Shared/actionTypes';
-import { SnackBarAlert } from './Features/SnackBarAlert';
-import { RouteDetails, RouteEditorProps } from '../interfaces';
-import { toastDisable } from '../Actions/toastActions';
-import Spinner from './Features/spinner/Spinner';
-import { processRouteData } from '../Utils/ProcessData';
+import { PROCESS_TYPE } from '../../Shared/constants';
+import { ACTION_TYPES } from '../../Shared/actionTypes';
+import { SnackBarAlert } from '../Features/SnackBarAlert';
+import { RouteDetails, RouteEditorProps } from '../../interfaces';
+import { toastDisable } from '../../Actions/toastActions';
+import Spinner from '../Features/spinner/Spinner';
+import { processRouteData } from '../../Utils/ProcessData';
 import {
   patchCurrentRouteData,
   postCurrentRouteData,
-} from '../Actions/routeActions';
-import { ToggleComponent } from './Features/ToggleComponent';
+} from '../../Actions/routeActions';
+import { ToggleComponent } from '../Features/ToggleComponent';
 
 const StyledButton = styled(Button)({
   backgroundColor: '#1ABB9C',

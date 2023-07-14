@@ -34,8 +34,24 @@ const showRouteRawView = (state = {}, action: any) => {
   }
 };
 
+const showConsumerRawView = (state = {}, action: any) => {
+  switch (action.type) {
+    case ACTION_TYPES.SET_CONSUMER_RAW_VIEW:
+      const tempState = new Map<string, boolean>();
+      for (let i = 0; i < action.payload.length; i += 1) {
+        tempState.set(action.payload[i].id, false);
+      }
+      return Object.fromEntries(tempState);
+    case ACTION_TYPES.HANDLE_CONSUMER_RAW_VIEW:
+      return { ...state, [action.payload.key]: action.payload.value };
+    default:
+      return state;
+  }
+};
+
 const rawViewReducer = combineReducers({
   showServiceRawView,
   showRouteRawView,
+  showConsumerRawView,
 });
 export default rawViewReducer;

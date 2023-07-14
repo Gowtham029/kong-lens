@@ -28,7 +28,6 @@ import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 import { useNavigate } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import { Dashboard } from './Dashboard';
-import PluginBox from '../Components/Features/PluginBox';
 import Info from './Info';
 import MenuItem from '../Components/Features/MenuItem';
 import Routes from './Routes';
@@ -40,8 +39,9 @@ import Users from './Users';
 import Connections from './Connections';
 import Settings from './Settings';
 import Services from './Services';
-import ServiceDetail from '../Components/ServiceDetail';
-import RouteDetail from '../Components/RouteDetail';
+import ServiceDetail from '../Components/Service/ServiceDetail';
+import RouteDetail from '../Components/Routes/RouteDetail';
+import ConsumerDetail from '../Components/Consumer/ConsumerDetail';
 
 const drawerWidth = 240;
 
@@ -143,17 +143,18 @@ const renderPages: { [page: string]: JSX.Element } = {
   settings: <Settings />,
   servicesDetail: <ServiceDetail />,
   routesDetail: <RouteDetail />,
+  consumerDetail: <ConsumerDetail />,
 };
 
 // const getPage = ({ props }: any) => {
 //   return renderPages[props.page]
 // };
 
-type MiniDrawerProps = {
+type HomeProps = {
   path: string;
 };
 
-export default function MiniDrawer({ path }: MiniDrawerProps): JSX.Element {
+export default function Home({ path }: HomeProps): JSX.Element {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState<JSX.Element>();

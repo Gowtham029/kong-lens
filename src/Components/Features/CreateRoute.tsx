@@ -10,7 +10,7 @@ import {
 import { useSelector } from 'react-redux';
 import { CreateRouteProps } from '../../interfaces';
 import { ROUTE_TEXT_FIELDS } from '../../Shared/constants';
-import RouteEditor from '../RouteEditor';
+import RouteEditor from '../Routes/RouteEditor';
 
 export const CreateRoute = ({
   open,
