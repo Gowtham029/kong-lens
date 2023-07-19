@@ -40,7 +40,7 @@ export default function Consumers(): JSX.Element {
   );
 
   const [promise, setPromise] = React.useState<unknown>();
-  const { showServiceRawView } = useSelector(
+  const { showConsumerRawView } = useSelector(
     (state: any) => state.rawViewReducer
   );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -200,7 +200,9 @@ export default function Consumers(): JSX.Element {
                   />
                   <RawView
                     json={row.original}
-                    open={showServiceRawView[row.original.custom_id] as boolean}
+                    open={
+                      showConsumerRawView[row.original.custom_id] as boolean
+                    }
                     onClose={() => handleRawView(row.original.custom_id, false)}
                   />
                 </>
