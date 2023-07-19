@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { LogOut } from '../interfaces';
 
 const parseJwt = (token: string) => {
   try {
@@ -12,11 +13,7 @@ const parseJwt = (token: string) => {
   }
 };
 
-type MyComponentProps = {
-  logout: () => void;
-};
-
-const AuthVerify: React.FC<MyComponentProps> = ({ logout }) => {
+const AuthVerify: React.FC<LogOut> = ({ logout }) => {
   const location = useLocation();
 
   useEffect(() => {

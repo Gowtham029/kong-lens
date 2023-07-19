@@ -189,3 +189,7 @@ export type CreateRouteProps = {
   onClose: VoidFunction;
   serviceName: string;
 };
+
+export type LogOut = {
+  logout: () => void;
+};
