@@ -12,7 +12,8 @@ const initialState = {
 const loginUser = (state = initialState, action: any) => {
   switch (action.type) {
     case ACTION_TYPES.SET_LOGIN_TOKEN:
-      localStorage.setItem('user', JSON.stringify(action.data));
+      if (!action.onlyReducer)
+        localStorage.setItem('user', JSON.stringify(action.data));
       return {
         ...state,
         user: action.data,

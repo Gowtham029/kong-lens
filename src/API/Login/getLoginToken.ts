@@ -18,6 +18,7 @@ export function* login(action: any): any {
     yield put({
       type: ACTION_TYPES.REMOVE_LOGIN_ERR_MESSAGE,
     });
+    yield put({ type: ACTION_TYPES.SET_LOADER_TRUE });
     action.navigate('/dashboard');
   } catch (error: any) {
     yield put({

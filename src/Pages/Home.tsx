@@ -27,6 +27,8 @@ import CastIcon from '@mui/icons-material/Cast';
 import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 import { useNavigate } from 'react-router-dom';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useDispatch } from 'react-redux';
 import { Dashboard } from './Dashboard';
 import Info from './Info';
 import MenuItem from '../Components/Features/MenuItem';
@@ -42,6 +44,7 @@ import Services from './Services';
 import ServiceDetail from '../Components/Service/ServiceDetail';
 import RouteDetail from '../Components/Routes/RouteDetail';
 import ConsumerDetail from '../Components/Consumer/ConsumerDetail';
+import { logOut } from '../Actions/loginActions';
 
 const drawerWidth = 240;
 
@@ -158,7 +161,7 @@ export default function Home({ path }: HomeProps): JSX.Element {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [currentPage, setCurrentPage] = React.useState<JSX.Element>();
-
+  const dispatch = useDispatch();
   function setPage(page: string): void {
     setCurrentPage(renderPages[page]);
   }
@@ -186,11 +189,15 @@ export default function Home({ path }: HomeProps): JSX.Element {
     setOpen(false);
   };
 
+  const handleLogOut = (): void => {
+    dispatch(logOut(navigate));
+  };
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="fixed" open={open} sx={{ bgcolor: '#2a3f54' }}>
-        <Toolbar>
+        <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -206,6 +213,7 @@ export default function Home({ path }: HomeProps): JSX.Element {
           <Typography variant="h6" noWrap component="div">
             Kong Lens
           </Typography>
+          <LogoutIcon onClick={handleLogOut} />
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open} sx={{ bgcolor: '#2a3f54' }}>

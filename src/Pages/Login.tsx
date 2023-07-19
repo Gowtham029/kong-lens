@@ -16,7 +16,7 @@ import { createTheme } from '@mui/material/styles';
 import { Alert, FormControl, Input, Stack } from '@mui/joy';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import logo from '../assets/kong-lens.png';
-import { setLoginToken } from '../Actions/loginActions';
+import { loginUser } from '../Actions/loginActions';
 
 const theme = createTheme();
 
@@ -31,7 +31,7 @@ function Login(): JSX.Element {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const data = { identity: userName, password };
-    dispatch(setLoginToken(data, navigate));
+    dispatch(loginUser(data, navigate));
   };
 
   return (
@@ -100,4 +100,4 @@ function Login(): JSX.Element {
   );
 }
 
-export default connect(null, { setLoginToken })(Login);
+export default connect(null, { loginUser })(Login);
