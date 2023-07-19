@@ -10,3 +10,10 @@ export const setLoginToken = (data: any, func: NavigateFunction) => {
     navigate: func,
   };
 };
+
+export const logOut = (func: NavigateFunction) => {
+  return {
+    type: ACTION_TYPES.LOGOUT,
+    navigate: func,
+  };
+};

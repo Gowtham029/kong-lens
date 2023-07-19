@@ -3,6 +3,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import Button from '@mui/joy/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControlLabel from '@mui/material/FormControlLabel';
@@ -13,13 +14,13 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { createTheme } from '@mui/material/styles';
 import { Alert, FormControl, Input, Stack } from '@mui/joy';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, connect } from 'react-redux';
 import logo from '../assets/kong-lens.png';
 import { setLoginToken } from '../Actions/loginActions';
 
 const theme = createTheme();
 
-export default function Login(): JSX.Element {
+function Login(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [userName, setUserName] = React.useState('');
@@ -98,3 +99,5 @@ export default function Login(): JSX.Element {
     </Container>
   );
 }
+
+export default connect(null, { setLoginToken })(Login);

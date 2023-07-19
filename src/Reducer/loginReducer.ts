@@ -4,16 +4,30 @@
 import { combineReducers } from 'redux';
 import { ACTION_TYPES } from '../Shared/actionTypes';
 
-const loginUser = (_state = false, action: any) => {
+const initialState = {
+  user: null,
+  isAuthenticated: false,
+};
+
+const loginUser = (state = initialState, action: any) => {
   switch (action.type) {
     case ACTION_TYPES.SET_LOGIN_TOKEN:
-      localStorage.setItem('token', action.data.token);
-      localStorage.setItem('refreshToken', action.data.refreshToken);
-      return true;
-    case ACTION_TYPES.LOGIN_USER:
-      return true;
+      localStorage.setItem('user', JSON.stringify(action.data));
+      return {
+        ...state,
+        user: action.data,
+        isAuthenticated: true,
+      };
+    case ACTION_TYPES.LOGOUT:
+      localStorage.removeItem('user');
+      action.navigate('/');
+      return {
+        ...state,
+        user: null,
+        isAuthenticated: false,
+      };
     default:
-      return false;
+      return state;
   }
 };
 
@@ -21,8 +35,10 @@ const showLoginErrorMessage = (state = {}, action: any) => {
   switch (action.type) {
     case ACTION_TYPES.SET_LOGIN_ERR_MESSAGE:
       return { ...action.payload, show: true };
+    case ACTION_TYPES.REMOVE_LOGIN_ERR_MESSAGE:
+      return { ...state, message: '', show: false };
     default:
-      return { message: '', show: false };
+      return state;
   }
 };
 

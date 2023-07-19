@@ -65,7 +65,7 @@
     "webpack-dev-server": "^4.15.1"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "react-scripts start -openssl-legacy-provider",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "test:coverage": "react-scripts test --coverage",

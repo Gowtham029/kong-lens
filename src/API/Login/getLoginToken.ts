@@ -16,11 +16,7 @@ export function* login(action: any): any {
     });
     yield put({ type: ACTION_TYPES.SET_LOGIN_TOKEN, data });
     yield put({
-      type: ACTION_TYPES.SET_LOGIN_ERR_MESSAGE,
-      payload: {
-        message: '',
-        show: false,
-      },
+      type: ACTION_TYPES.REMOVE_LOGIN_ERR_MESSAGE,
     });
     action.navigate('/dashboard');
   } catch (error: any) {

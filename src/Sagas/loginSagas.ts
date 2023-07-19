@@ -1,4 +1,4 @@
-import { takeEvery, takeLatest } from 'redux-saga/effects';
+import { takeEvery } from 'redux-saga/effects';
 import { ACTION_TYPES } from '../Shared/actionTypes';
 import { login } from '../API/Login/getLoginToken';
 
