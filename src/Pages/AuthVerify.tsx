@@ -1,11 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-types */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { FunctionComponent, useCallback, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { Action } from 'redux';
-import { logOut } from '../Actions/loginActions';
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 
 const parseJwt = (token: string) => {
   try {
@@ -26,10 +23,8 @@ const AuthVerify: React.FC<MyComponentProps> = ({ logout }) => {
     const user = JSON.parse(localStorage.getItem('user') as string);
     if (user) {
       const decodedJwt = parseJwt(user.token);
-      console.log('decoded - ', decodedJwt);
       if (decodedJwt.exp * 1000 < Date.now()) {
         logout();
-        console.log('loggggggggggging outtttt');
       }
     }
   }, [location, logout]);

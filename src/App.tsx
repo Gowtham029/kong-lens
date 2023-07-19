@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback } from 'react';
 import {
-  BrowserRouter,
   Navigate,
   Route,
   Routes,
