@@ -21,7 +21,7 @@ const loginUser = (state = initialState, action: any) => {
       };
     case ACTION_TYPES.LOGOUT:
       localStorage.removeItem('user');
-      action.navigate('/');
+      action.navigate('/login');
       return {
         ...state,
         user: null,
@@ -43,9 +43,21 @@ const showLoginErrorMessage = (state = {}, action: any) => {
   }
 };
 
+const setPreserveRoute = (state = false, action: any) => {
+  switch (action.type) {
+    case ACTION_TYPES.SET_PRESERVE_ROUTE_FALSE:
+      return false;
+    case ACTION_TYPES.SET_PRESERVE_ROUTE_TRUE:
+      return true;
+    default:
+      return state;
+  }
+};
+
 const loginReducer = combineReducers({
   loginUser,
   showLoginErrorMessage,
+  setPreserveRoute,
 });
 
 export default loginReducer;

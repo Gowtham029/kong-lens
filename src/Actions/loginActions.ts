@@ -3,11 +3,16 @@
 import { NavigateFunction } from 'react-router-dom';
 import { ACTION_TYPES } from '../Shared/actionTypes';
 
-export const loginUser = (data: any, func: NavigateFunction) => {
+export const loginUser = (
+  data: any,
+  func: NavigateFunction,
+  preserveRoute: boolean
+) => {
   return {
     type: ACTION_TYPES.LOGIN_USER,
     payload: data,
     navigate: func,
+    preserveRoute,
   };
 };
 
@@ -23,5 +28,13 @@ export const logOut = (func: NavigateFunction) => {
   return {
     type: ACTION_TYPES.LOGOUT,
     navigate: func,
+  };
+};
+
+export const preserveRoute = (state: boolean) => {
+  return {
+    type: state
+      ? ACTION_TYPES.SET_PRESERVE_ROUTE_TRUE
+      : ACTION_TYPES.SET_PRESERVE_ROUTE_FALSE,
   };
 };

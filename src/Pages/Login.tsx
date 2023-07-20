@@ -13,7 +13,7 @@ import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import { createTheme } from '@mui/material/styles';
-import { Alert, FormControl, Input, Stack } from '@mui/joy';
+import { Alert, Input, Stack } from '@mui/joy';
 import { useDispatch, useSelector, connect } from 'react-redux';
 import logo from '../assets/kong-lens.png';
 import { loginUser } from '../Actions/loginActions';
@@ -25,13 +25,14 @@ function Login(): JSX.Element {
   const dispatch = useDispatch();
   const [userName, setUserName] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const showErrorMessage = useSelector(
-    (state: any) => state.loginReducer.showLoginErrorMessage
+  const { showLoginErrorMessage } = useSelector(
+    (state: any) => state.loginReducer
   );
+  const { setPreserveRoute } = useSelector((state: any) => state.loginReducer);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
     const data = { identity: userName, password };
-    dispatch(loginUser(data, navigate));
+    dispatch(loginUser(data, navigate, setPreserveRoute));
   };
 
   return (
@@ -88,9 +89,9 @@ function Login(): JSX.Element {
                 </Link>
               </Grid>
             </Grid>
-            {showErrorMessage.show && (
+            {showLoginErrorMessage.show && (
               <Alert variant="soft" color="danger">
-                {showErrorMessage.message}
+                {showLoginErrorMessage.message}
               </Alert>
             )}
           </Stack>

@@ -149,10 +149,6 @@ const renderPages: { [page: string]: JSX.Element } = {
   consumerDetail: <ConsumerDetail />,
 };
 
-// const getPage = ({ props }: any) => {
-//   return renderPages[props.page]
-// };
-
 type HomeProps = {
   path: string;
 };

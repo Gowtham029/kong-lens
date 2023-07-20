@@ -6,6 +6,7 @@ import {
   AUTH_API_URL,
 } from '../../Shared/constants';
 import { POST } from '../../Helpers/ApiHelpers';
+import { preserveRoute } from '../../Actions/loginActions';
 
 export function* login(action: any): any {
   try {
@@ -18,8 +19,9 @@ export function* login(action: any): any {
     yield put({
       type: ACTION_TYPES.REMOVE_LOGIN_ERR_MESSAGE,
     });
-    yield put({ type: ACTION_TYPES.SET_LOADER_TRUE });
-    action.navigate('/dashboard');
+    if (action.preserveRoute) action.navigate(-1);
+    else action.navigate('/dashboard');
+    yield put(preserveRoute(false));
   } catch (error: any) {
     yield put({
       type: ACTION_TYPES.SET_LOGIN_ERR_MESSAGE,
