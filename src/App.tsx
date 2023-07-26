@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useEffect } from 'react';
-import { Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import {
+  Navigate,
+  Route,
+  Routes,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
@@ -33,7 +39,10 @@ function App(): JSX.Element {
     <>
       <Routes>
         {!loginUser.isAuthenticated && (
-          <Route path="/login" element={<Login />} />
+          <>
+            <Route path="/login" element={<Login />} />
+            <Route path="/" element={<Navigate to="/login" replace />} />
+          </>
         )}
         {loginUser.isAuthenticated && (
           <>
