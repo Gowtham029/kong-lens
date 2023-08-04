@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
@@ -5,10 +6,13 @@ import { styled } from '@mui/material/styles';
 import InfoIcon from '@mui/icons-material/Info';
 import LanIcon from '@mui/icons-material/Lan';
 import StorageIcon from '@mui/icons-material/Storage';
+import { useSelector, useDispatch } from 'react-redux';
 import PluginBox from '../Components/Features/PluginBox';
 import InfoBox from '../Components/Features/InfoBox';
 import { GET } from '../Helpers/ApiHelpers';
 import { BASE_API_URL } from '../Shared/constants';
+import Spinner from '../Components/Features/spinner/Spinner';
+import { ACTION_TYPES } from '../Shared/actionTypes';
 
 // Define the container for the three boxes
 const BoxContainer = styled(Box)({
@@ -67,7 +71,8 @@ export const Dashboard = (): JSX.Element => {
   const [infoData, setInfoData] = useState<any>([]);
   const [connectionsData, setConnectionsData] = useState<any>([]);
   const [dbData, setDBData] = useState<any>([]);
-
+  const loadingData = useSelector((state: any) => state.loadingData);
+  const dispatch = useDispatch();
   // Use useEffect to fetch API data on component mount
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -76,9 +81,10 @@ export const Dashboard = (): JSX.Element => {
       const connections = await GET({ url: `${BASE_API_URL}/status` });
       setApiData(result.data);
       setApiConnectionData(connections.data);
+      dispatch({ type: ACTION_TYPES.SET_LOADER_FALSE });
     }
     getData();
-  }, []);
+  }, [dispatch]);
 
   // Use useEffect to update the infoData state after apiData has changed
   useEffect(() => {
@@ -132,14 +138,20 @@ export const Dashboard = (): JSX.Element => {
   }, [apiConnectionData, apiData]);
   return (
     <Box>
-      <BoxContainer>
-        <InfoBox icon={icon1} name={name1} keyValues={infoData} />
-        <InfoBox icon={icon2} name={name2} keyValues={connectionsData} />
-        <InfoBox icon={icon3} name={name3} keyValues={dbData} />
-      </BoxContainer>
-      <br />
-      <br />
-      <PluginBox />
+      {loadingData ? (
+        <Spinner />
+      ) : (
+        <>
+          <BoxContainer>
+            <InfoBox icon={icon1} name={name1} keyValues={infoData} />
+            <InfoBox icon={icon2} name={name2} keyValues={connectionsData} />
+            <InfoBox icon={icon3} name={name3} keyValues={dbData} />
+          </BoxContainer>
+          <br />
+          <br />
+          <PluginBox />
+        </>
+      )}
     </Box>
   );
 };

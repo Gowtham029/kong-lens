@@ -1,10 +1,13 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { call, cancel, put } from 'redux-saga/effects';
-import { DELETE, GET } from '../Helpers/ApiHelpers';
-import { API_RESPONSE_SNACK_MESSAGE, BASE_API_URL } from '../Shared/constants';
-import { ACTION_TYPES } from '../Shared/actionTypes';
+import { call, put } from 'redux-saga/effects';
+import { DELETE } from '../../Helpers/ApiHelpers';
+import {
+  API_RESPONSE_SNACK_MESSAGE,
+  BASE_API_URL,
+} from '../../Shared/constants';
+import { ACTION_TYPES } from '../../Shared/actionTypes';
 
 export function* deleteService(action: any): any {
   try {

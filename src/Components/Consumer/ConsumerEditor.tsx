@@ -6,17 +6,15 @@ import Input from '@mui/joy/Input';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { TagsInput } from 'react-tag-input-component';
 import { useDispatch, useSelector } from 'react-redux';
-import { PROCESS_TYPE } from '../Shared/constants';
-import { ACTION_TYPES } from '../Shared/actionTypes';
-import { SnackBarAlert } from './Features/SnackBarAlert';
-import { ServiceDetails, ServiceEditorProps } from '../interfaces';
+import { ACTION_TYPES } from '../../Shared/actionTypes';
+import { SnackBarAlert } from '../Features/SnackBarAlert';
+import { ConsumerDetails, ConsumerEditorProps } from '../../interfaces';
+import { toastDisable } from '../../Actions/toastActions';
+import Spinner from '../Features/spinner/Spinner';
 import {
-  patchCurrentServiceData,
-  postCurrentServiceData,
-} from '../Actions/serviceActions';
-import { toastDisable } from '../Actions/toastActions';
-import Spinner from './Features/spinner/Spinner';
-import { processServiceData } from '../Utils/ProcessData';
+  patchCurrentConsumerData,
+  postCurrentConsumerData,
+} from '../../Actions/consumerActions';
 
 const StyledButton = styled(Button)({
   backgroundColor: '#1ABB9C',
@@ -26,10 +24,10 @@ const StyledButton = styled(Button)({
   },
 });
 
-const ServiceEditor = ({
+const ConsumerEditor = ({
   content,
   textFields,
-}: ServiceEditorProps): JSX.Element => {
+}: ConsumerEditorProps): JSX.Element => {
   const { id } = useParams();
 
   const navigate = useNavigate();
@@ -40,12 +38,10 @@ const ServiceEditor = ({
 
   const param = query.get('newId') === 'true';
 
-  content = processServiceData(content, PROCESS_TYPE.PRE_PROCESS);
-
   const loadingData = useSelector((state: any) => state.loadingData);
 
-  const { currentServiceData } = useSelector(
-    (state: any) => state.serviceReducer
+  const { currentConsumerData } = useSelector(
+    (state: any) => state.consumerReducer
   );
 
   const [formData, setFormData] = React.useState(content);
@@ -57,10 +53,10 @@ const ServiceEditor = ({
   const dispatch = useDispatch();
 
   const handleOnCancel = (): void => {
-    setFormData(currentServiceData);
+    setFormData(currentConsumerData);
     dispatch({
-      type: ACTION_TYPES.SET_CURRENT_SERVICE_DATA,
-      payload: currentServiceData,
+      type: ACTION_TYPES.SET_CURRENT_CONSUMER_DATA,
+      payload: currentConsumerData,
     });
   };
 
@@ -80,7 +76,7 @@ const ServiceEditor = ({
   };
 
   const handleListChange = (
-    key: keyof ServiceDetails,
+    key: keyof ConsumerDetails,
     value: string[]
   ): void => {
     setFormData({
@@ -91,17 +87,12 @@ const ServiceEditor = ({
 
   const handleOnSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
+    const request = formData;
     if (param) {
-      const request = formData;
       delete request.id;
-      if (request.ca_certificates === '') request.ca_certificates = null;
-      dispatch(postCurrentServiceData(request, navigate));
+      dispatch(postCurrentConsumerData(request, navigate));
     } else {
-      const request: ServiceDetails = processServiceData(
-        formData,
-        PROCESS_TYPE.POST_PROCESS
-      );
-      dispatch(patchCurrentServiceData(request, id as string));
+      dispatch(patchCurrentConsumerData(request, id as string));
     }
   };
 
@@ -121,7 +112,7 @@ const ServiceEditor = ({
       ) : (
         <Box
           sx={{
-            width: '100%',
+            width: '60%',
             gap: '24px',
             margin: 'auto',
           }}
@@ -145,9 +136,9 @@ const ServiceEditor = ({
                   </InputLabel>
                   {text.type === 'list' && (
                     <TagsInput
-                      value={formData[text.key as keyof ServiceDetails]}
+                      value={formData[text.key as keyof ConsumerDetails]}
                       onChange={(e) => {
-                        handleListChange(text.key as keyof ServiceDetails, e);
+                        handleListChange(text.key as keyof ConsumerDetails, e);
                       }}
                     />
                   )}
@@ -158,7 +149,7 @@ const ServiceEditor = ({
                       }}
                       type={text.type}
                       name={text.key}
-                      value={formData[text.key as keyof ServiceDetails]}
+                      value={formData[text.key as keyof ConsumerDetails]}
                       onChange={handleOnChange}
                     />
                   )}
@@ -192,4 +183,4 @@ const ServiceEditor = ({
   );
 };
 
-export default ServiceEditor;
+export default ConsumerEditor;

@@ -7,6 +7,8 @@ import toastReducer from './toastReducer';
 import loadingData from './loadingReducer';
 import routeReducer from './routeReducer';
 import rawViewReducer from './rawViewReducer';
+import loginReducer from './loginReducer';
+import consumerReducer from './consumerReducer';
 
 const rootReducer = combineReducers({
   loadingData,
@@ -14,6 +16,8 @@ const rootReducer = combineReducers({
   routeReducer,
   toastReducer,
   rawViewReducer,
+  loginReducer,
+  consumerReducer,
 });
 
 export default rootReducer;

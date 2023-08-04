@@ -100,6 +100,14 @@ export type ServiceDetails = {
   updated_at?: any;
 };
 
+export type ConsumerDetails = {
+  username: any;
+  custom_id: any;
+  tags: any;
+  created_at?: any;
+  id: any;
+};
+
 export type RouteEditorProps = {
   content: RouteDetails;
   textFields: keyValueType[];
@@ -108,6 +116,11 @@ export type RouteEditorProps = {
 
 export type ServiceEditorProps = {
   content: ServiceDetails;
+  textFields: keyValueType[];
+};
+
+export type ConsumerEditorProps = {
+  content: ConsumerDetails;
   textFields: keyValueType[];
 };
 
@@ -175,4 +188,8 @@ export type CreateRouteProps = {
   open: boolean;
   onClose: VoidFunction;
   serviceName: string;
+};
+
+export type LogOut = {
+  logout: () => void;
 };
