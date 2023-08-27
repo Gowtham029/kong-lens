@@ -24,6 +24,13 @@ import {
   watchPatchConsumerDataSaga,
   watchPostConsumerDataSaga,
 } from './consumerSagas';
+import {
+  watchGetPluginDataSaga,
+  watchPostPluginDataSaga,
+  watchDeletePluginDataSaga,
+  watchPatchPluginDataSaga,
+  watchGetCurrentPluginDataSaga,
+} from './pluginSagas';
 
 export default function* combinedSaga() {
   yield all([
@@ -44,5 +51,10 @@ export default function* combinedSaga() {
     fork(watchGetCurrentConsumerDataSaga),
     fork(watchPatchConsumerDataSaga),
     fork(watchPostConsumerDataSaga),
+    fork(watchGetPluginDataSaga),
+    fork(watchGetCurrentPluginDataSaga),
+    fork(watchPostPluginDataSaga),
+    fork(watchDeletePluginDataSaga),
+    fork(watchPatchPluginDataSaga),
   ]);
 }

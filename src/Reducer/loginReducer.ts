@@ -21,7 +21,7 @@ const loginUser = (state = initialState, action: any) => {
       };
     case ACTION_TYPES.LOGOUT:
       localStorage.removeItem('user');
-      action.navigate('/login');
+      action.navigate('/');
       return {
         ...state,
         user: null,

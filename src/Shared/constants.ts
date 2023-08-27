@@ -211,6 +211,21 @@ export const CONSUMER_DETAILS_INTERFACE = {
   tags: [],
 };
 
+export const PLUGIN_DETAILS_INTERFACE = {
+  consumer: null || '',
+  id: '',
+  service: null || {},
+  protocols: [],
+  name: '',
+  enabled: true,
+  config: {
+    anonymous: null,
+    hide_credentials: false,
+  },
+  route: null || {},
+  tags: null || [],
+};
+
 export const API_RESPONSE_SNACK_MESSAGE = {
   unableToFetchData: 'Unable to Fetch data, Please try again!',
   couldNotModifyData: 'Could not able to modify data!',
@@ -227,6 +242,8 @@ export const API_RESPONSE_SNACK_MESSAGE = {
   errorWhileLogin: 'Please try again!',
   deletedConsumer: 'Successfully deleted the Consumer!',
   modifiedConumer: 'Successfully modified the consumer details!',
+  deletedPlugin: 'Successfully deleted the Plugin!',
+  modifiedPlugin: 'Successfully modified the Plugin details!',
 };
 
 export const PROCESS_TYPE = {

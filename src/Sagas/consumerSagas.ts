@@ -4,7 +4,7 @@ import { ACTION_TYPES } from '../Shared/actionTypes';
 import { getConsumerData } from '../API/Consumer/getConsumerData';
 import { deleteConsumer } from '../API/Consumer/deleteConsumer';
 import { getCurrentConsumer } from '../API/Consumer/getCurrentConusmer';
-import { patchConsumer } from '../API/Consumer/patchConumer';
+import { patchConsumer } from '../API/Consumer/patchConsumer';
 import { postConsumer } from '../API/Consumer/postConsumer';
 
 export function* watchGetConsumerDataSaga(): any {

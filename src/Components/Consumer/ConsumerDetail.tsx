@@ -18,6 +18,7 @@ import ConsumerEditor from './ConsumerEditor';
 import { CONSUMER_TEXT_FIELDS } from '../../Shared/constants';
 import Spinner from '../Features/spinner/Spinner';
 import Routes from '../../Pages/Routes';
+import AccessibleRoutes from './AccessibleRoutes';
 
 export default function ConsumerDetail(): JSX.Element {
   const { id } = useParams();
@@ -30,7 +31,7 @@ export default function ConsumerDetail(): JSX.Element {
     { value: 'Details', icon: <IconInfoCircle /> },
     { value: 'Groups', icon: <GroupsIcon /> },
     { value: 'Credentials', icon: <SecurityIcon /> },
-    { value: 'Accesible Routes', icon: <FilterDramaIcon /> },
+    { value: 'Accessible Routes', icon: <FilterDramaIcon /> },
     { value: 'Plugins', icon: <ExtensionIcon /> },
   ];
 
@@ -62,6 +63,7 @@ export default function ConsumerDetail(): JSX.Element {
       />
     ),
     Groups: <Routes nested />,
+    'Accessible Routes': <AccessibleRoutes />,
   };
   return (
     <>

@@ -8,31 +8,25 @@ import {
 } from '../../Shared/constants';
 import { ACTION_TYPES } from '../../Shared/actionTypes';
 
-export function* patchRoute(action: any): any {
+export function* patchPlugin(action: any): any {
   try {
-    yield put({ type: ACTION_TYPES.SET_LOADER_TRUE });
     yield call(PATCH, {
-      url: `${BASE_API_URL}/routes/${action.payload.id}`,
+      url: `${BASE_API_URL}/plugins/${action.payload.id}`,
       headers: { 'Access-Control-Allow-Origin': '*' },
       body: action.payload.data,
     });
-    yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
     yield put({
-      type: ACTION_TYPES.SET_CURRENT_ROUTE_DATA,
+      type: ACTION_TYPES.SET_CURRENT_PLUGIN_DATA,
       payload: action.payload.data,
     });
     yield put({
       type: ACTION_TYPES.TOAST_NOTIFICATION,
       payload: {
-        message: API_RESPONSE_SNACK_MESSAGE.modifiedExistingRoute,
+        message: API_RESPONSE_SNACK_MESSAGE.modifiedPlugin,
         severity: 'success',
       },
     });
   } catch (error: any) {
-    yield put({
-      type: ACTION_TYPES.SET_CURRENT_ROUTE_DATA,
-      payload: action.payload.data,
-    });
     yield put({
       type: ACTION_TYPES.TOAST_NOTIFICATION,
       payload: {
@@ -42,7 +36,5 @@ export function* patchRoute(action: any): any {
         severity: 'error',
       },
     });
-  } finally {
-    yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
   }
 }
