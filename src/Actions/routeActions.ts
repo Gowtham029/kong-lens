@@ -42,3 +42,10 @@ export const deleteRouteData = (id: string, index: number) => {
     payload: { id, index },
   };
 };
+
+export const getRoutePluginsAction = (id: string) => {
+  return {
+    type: ACTION_TYPES.GET_ROUTE_PLUGIN_DATA,
+    payload: id,
+  };
+};

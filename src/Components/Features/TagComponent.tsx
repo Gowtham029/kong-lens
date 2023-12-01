@@ -15,7 +15,7 @@ export const TagComponent = ({ tag, isList }: TagProps): JSX.Element => {
       }}
     >
       {isList ? (
-        <div>{tag}</div>
+        <div style={{ fontSize: '5px' }}>{tag}</div>
       ) : (
         <div
           style={{
@@ -26,7 +26,9 @@ export const TagComponent = ({ tag, isList }: TagProps): JSX.Element => {
           }}
         >
           <SellIcon color="success" sx={{ width: '16px', margin: '2px' }} />
-          <div style={{ margin: '2px 6px 2px 2px' }}>{tag}</div>
+          <div style={{ margin: '2px 6px 2px 2px', fontSize: '13px' }}>
+            {tag}
+          </div>
         </div>
       )}
     </Box>

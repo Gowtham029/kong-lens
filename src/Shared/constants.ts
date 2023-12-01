@@ -244,9 +244,15 @@ export const API_RESPONSE_SNACK_MESSAGE = {
   modifiedConumer: 'Successfully modified the consumer details!',
   deletedPlugin: 'Successfully deleted the Plugin!',
   modifiedPlugin: 'Successfully modified the Plugin details!',
+  copiedToClipboard: 'Copied to clipboard successfully!',
 };
 
 export const PROCESS_TYPE = {
   PRE_PROCESS: 'PRE_PROCESS',
   POST_PROCESS: 'POST_PROCESS',
+};
+
+export const ROUTE_TYPE = {
+  SERVICE: 'Service',
+  ROUTE: 'Route',
 };

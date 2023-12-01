@@ -45,6 +45,9 @@ const tablePluginData = (
         } else data.consumer;
       });
       return action.payload;
+    case ACTION_TYPES.CONFIRM_PLUGIN_DELETE:
+      state.splice(action.index, 1);
+      return [...state];
     default:
       return state;
   }

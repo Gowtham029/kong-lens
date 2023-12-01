@@ -1,7 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import DropDown from './DropDown';
 
-const ColumnList = (): JSX.Element => {
+type ColumnListProp = {
+  dataList: [];
+  type: string;
+  rawData: any;
+};
+
+const ColumnList = ({
+  dataList,
+  type,
+  rawData,
+}: ColumnListProp): JSX.Element => {
   return (
     <div>
       <div
@@ -9,14 +20,19 @@ const ColumnList = (): JSX.Element => {
           display: 'flex',
           flexDirection: 'column',
           width: 100,
-          gap: 20,
+          gap: 10,
         }}
       >
-        <div>fdsf</div>
-        <div>test.com</div>
-        <div>
-          <DropDown />
-        </div>
+        {dataList.map((data: any) => (
+          <div style={{ color: data.color }}>{data.value}</div>
+        ))}
+        {type === 'Service' ? (
+          <div>
+            <DropDown type={type} rawData={rawData} />
+          </div>
+        ) : (
+          ''
+        )}
       </div>
     </div>
   );

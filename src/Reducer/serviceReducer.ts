@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 /* eslint-disable dot-notation */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
@@ -54,9 +55,40 @@ const currentServiceRouteData = (state = [], action: any) => {
   }
 };
 
+const currentServicePluginData = (state = [], action: any) => {
+  switch (action.type) {
+    case ACTION_TYPES.GET_CURRENT_SERVICE_PLUGIN_DATA:
+      return state;
+    case ACTION_TYPES.SET_CURRENT_SERVICE_PLUGIN_DATA:
+      action.payload.forEach((data: any) => {
+        if (data.service == null) {
+          data.service = { id: 'All EntryPoints' };
+          data.scope = 'Global';
+        } else {
+          data.service;
+          data.scope = 'services';
+        }
+        if (data.consumer == null) {
+          data.consumer = { id: 'All Consumers' };
+          data.scope = 'Global';
+        } else data.consumer;
+        delete data.service;
+      });
+      return action.payload;
+    case ACTION_TYPES.ADD_CURRENT_SERIVE_PLUGIN_DATA:
+      return [...state, action.payload];
+    case ACTION_TYPES.CONFIRM_PLUGIN_DELETE:
+      state.splice(action.index, 1);
+      return [...state];
+    default:
+      return state;
+  }
+};
+
 const serviceReducer = combineReducers({
   serviceData,
   currentServiceData,
   currentServiceRouteData,
+  currentServicePluginData,
 });
 export default serviceReducer;

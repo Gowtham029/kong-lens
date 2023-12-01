@@ -47,17 +47,17 @@ services:
   #   restart: on-failure
   #   ports:
   #     - 3000:80
-  kong-lens-dev:
-    build:
-      context: ./
-      dockerfile: dev.Dockerfile
-    container_name: kong-lens-dev
-    restart: on-failure
-    ports:  
-      - 3000:3000
-    volumes:
-       - ./:/app/src
-       - /app/src/node_modules
+  # kong-lens-dev:
+  #   build:
+  #     context: ./
+  #     dockerfile: dev.Dockerfile
+  #   container_name: kong-lens-dev
+  #   restart: on-failure
+  #   ports:  
+  #     - 3000:3000
+  #   volumes:
+  #      - ./:/app/src
+  #      - /app/src/node_modules
 
 volumes:
   db-data-kong-postgres:

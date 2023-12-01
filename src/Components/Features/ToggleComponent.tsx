@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Switch, Typography } from '@mui/joy';
+import { Switch } from '@mui/joy';
 import { toggleProps } from '../../interfaces';
 
 export const ToggleComponent = ({

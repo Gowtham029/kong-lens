@@ -5,6 +5,7 @@ import {
   watchDeleteServiceDataSaga,
   watchGetCurrentServiceDataSaga,
   watchGetServiceDataSaga,
+  watchGetServicePluginDataSaga,
   watchGetServiceRouteDataSaga,
   watchPatchServiceDataSaga,
   watchPostServiceDataSaga,
@@ -13,6 +14,7 @@ import {
   watchDeleteRouteDataSaga,
   watchGetCurrentRouteDataSaga,
   watchGetRouteDataSaga,
+  watchGetRoutePluginsDataSaga,
   watchPatchRouteDataSaga,
   watchPostRouteDataSaga,
 } from './routeSagas';
@@ -31,6 +33,10 @@ import {
   watchPatchPluginDataSaga,
   watchGetCurrentPluginDataSaga,
 } from './pluginSagas';
+import {
+  watchGetDashboardDataSaga,
+  watchGetDashboardResultDataSaga,
+} from './dashboardSagas';
 
 export default function* combinedSaga() {
   yield all([
@@ -40,6 +46,7 @@ export default function* combinedSaga() {
     fork(watchGetRouteDataSaga),
     fork(watchDeleteRouteDataSaga),
     fork(watchGetCurrentServiceDataSaga),
+    fork(watchGetServicePluginDataSaga),
     fork(watchPostServiceDataSaga),
     fork(watchPatchServiceDataSaga),
     fork(watchPatchRouteDataSaga),
@@ -56,5 +63,8 @@ export default function* combinedSaga() {
     fork(watchPostPluginDataSaga),
     fork(watchDeletePluginDataSaga),
     fork(watchPatchPluginDataSaga),
+    fork(watchGetDashboardDataSaga),
+    fork(watchGetDashboardResultDataSaga),
+    fork(watchGetRoutePluginsDataSaga),
   ]);
 }

@@ -17,7 +17,6 @@ import { SnackBarAlert } from '../Components/Features/SnackBarAlert';
 import { PageTypeProps, PluginData } from '../interfaces';
 import PageHeader from '../Components/Features/PageHeader';
 import { toastDisable } from '../Actions/toastActions';
-import { deleteConsumerData } from '../Actions/consumerActions';
 import DialogModal from '../Components/Features/DialogModal';
 import { RawView } from '../Components/Features/RawView';
 
@@ -25,6 +24,7 @@ import { ACTION_TYPES } from '../Shared/actionTypes';
 import { PLUGIN_DETAILS_INTERFACE } from '../Shared/constants';
 import { DateTimeFormat } from '../Utils/DateTimeFormatter';
 import {
+  deletePluginData,
   getPluginData,
   patchCurrentPluginData,
 } from '../Actions/pluginActions';
@@ -40,21 +40,29 @@ export default function Plugins({ nested }: PageTypeProps): JSX.Element {
   );
 
   const [promise, setPromise] = React.useState<unknown>();
-  const { showConsumerRawView } = useSelector(
+  const { showPluginRawView } = useSelector(
     (state: any) => state.rawViewReducer
   );
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [status, execute, resolve, reject, reset] = useAwaitableComponent();
-  const tableData = useSelector(
-    (state: any) => state.pluginReducer.tablePluginData
+
+  const { currentServicePluginData } = useSelector(
+    (state: any) => state.serviceReducer
   );
+
+  const { pluginData, tablePluginData } = useSelector(
+    (state: any) => state.pluginReducer
+  );
+
+  const tableData = nested ? currentServicePluginData : tablePluginData;
+
   const loadingData = useSelector((state: any) => state.loadingData);
-  // const [tableData, setTableData] = useState<ServiceDetails[]>([]);
+
   const navigate = useNavigate();
   React.useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    dispatch(getPluginData());
-  }, [dispatch]);
+    !nested && dispatch(getPluginData());
+  }, [dispatch, nested]);
 
   const handleDeleteRow = React.useCallback(
     (row: MRT_Row<PluginData>) => {
@@ -62,7 +70,7 @@ export default function Plugins({ nested }: PageTypeProps): JSX.Element {
         return;
       }
       // send api delete request here, then refetch or update local table data for re-render
-      dispatch(deleteConsumerData(row.original.id, row.index));
+      dispatch(deletePluginData(row.original.id, row.index));
     },
     [dispatch]
   );
@@ -87,48 +95,39 @@ export default function Plugins({ nested }: PageTypeProps): JSX.Element {
     setConfirmDialogOpen(!confirmDialogOpen);
   };
 
+  const rawViewData: any = {};
+
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  const getOriginalPluginData = () => {
+    pluginData.forEach((data: any) => {
+      rawViewData[data.id] = data;
+    });
+  };
+
+  getOriginalPluginData();
+
   const columns = React.useMemo<MRT_ColumnDef<PluginData>[]>(
     () => [
       {
         accessorKey: 'name',
-        enableHiding: false,
+        enableHiding: true,
         header: 'NAME',
         size: 140,
-        // muiTableBodyCellProps: ({ cell }) => ({
-        //   // onClick: () => {
-        //   //   navigate(`/consumers/${cell.row.original.username}?newId=false`);
-        //   // },
-        //   sx: {
-        //     cursor: 'pointer',
-        //     textDecoration: 'none',
-        //     color: '#438BCA',
-        //   },
-        // }),
       },
       {
         accessorKey: 'scope',
-        enableHiding: false,
+        enableHiding: !nested,
         header: 'SCOPE',
         size: 140,
-        // muiTableBodyCellProps: ({ cell }) => ({
-        //   // onClick: () => {
-        //   //   navigate(`/consumers/${cell.row.original.username}?newId=false`);
-        //   // },
-        //   sx: {
-        //     cursor: 'pointer',
-        //     textDecoration: 'none',
-        //     color: '#438BCA',
-        //   },
-        // }),
       },
       {
         // eslint-disable-next-line yoda
         accessorKey: 'service.id',
         header: 'APPLY TO',
-        enableHiding: false,
+        enableHiding: !nested,
         muiTableBodyCellProps: ({ cell }) => ({
           onClick: () => {
-            cell.row.original.consumer.id !== 'All Services'
+            cell.row.original.service.id !== 'All EntryPoints'
               ? navigate(
                   `/services/${cell.row.original.service.id}?newId=false`
                 )
@@ -136,12 +135,12 @@ export default function Plugins({ nested }: PageTypeProps): JSX.Element {
           },
           sx: {
             cursor:
-              cell.row.original.consumer.id !== 'All Consumers'
+              cell.row.original.service.id !== 'All EntryPoints'
                 ? 'pointer'
                 : null,
             textDecoration: 'none',
             color:
-              cell.row.original.consumer.id !== 'All Consumers'
+              cell.row.original.service.id !== 'All EntryPoints'
                 ? '#438BCA'
                 : 'black',
           },
@@ -150,7 +149,7 @@ export default function Plugins({ nested }: PageTypeProps): JSX.Element {
       {
         accessorKey: 'consumer.id',
         header: 'CONSUMER',
-        enableHiding: false,
+        enableHiding: true,
         muiTableBodyCellProps: ({ cell }) => ({
           onClick: () => {
             cell.row.original.consumer.id !== 'All Consumers'
@@ -183,7 +182,7 @@ export default function Plugins({ nested }: PageTypeProps): JSX.Element {
         ),
       },
     ],
-    [navigate]
+    [navigate, nested]
   );
   return (
     <>
@@ -223,15 +222,11 @@ export default function Plugins({ nested }: PageTypeProps): JSX.Element {
           enableEditing
           initialState={{
             columnVisibility: {
-              id: false,
-              connect_timeout: false,
-              write_timeout: false,
-              read_timeout: false,
-              retries: false,
-              protocol: false,
-              port: false,
-              ca_certificates: false,
-              client_certificate: false,
+              name: true,
+              scope: !nested,
+              'service.id': !nested,
+              'consumer.id': true,
+              created_at: true,
             },
           }}
           renderRowActions={({ row }) => (
@@ -245,8 +240,8 @@ export default function Plugins({ nested }: PageTypeProps): JSX.Element {
                     onClick={() => handleRawView(row.original.id, true)}
                   />
                   <RawView
-                    json={row.original}
-                    open={showConsumerRawView[row.original.id] as boolean}
+                    json={rawViewData[row.original.id]}
+                    open={showPluginRawView[row.original.id] as boolean}
                     onClose={() => handleRawView(row.original.id, false)}
                   />
                 </>

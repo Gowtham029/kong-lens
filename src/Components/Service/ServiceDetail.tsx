@@ -17,6 +17,7 @@ import Plugins from '../../Pages/Plugins';
 import { SnackBarAlert } from '../Features/SnackBarAlert';
 import {
   getCurrentServiceData,
+  getCurrentServicePluginData,
   getCurrentServiceRouteData,
 } from '../../Actions/serviceActions';
 import { toastDisable } from '../../Actions/toastActions';
@@ -55,6 +56,7 @@ const ServiceDetail = (): JSX.Element => {
     const put = (): void => {
       dispatch(getCurrentServiceData(id as string));
       dispatch(getCurrentServiceRouteData(id as string));
+      dispatch(getCurrentServicePluginData(id as string, 'services'));
     };
     if (!param) {
       put();

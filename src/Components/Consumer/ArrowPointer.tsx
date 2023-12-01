@@ -6,7 +6,7 @@ type text = {
 };
 const ArrowPointer = ({ text }: text): JSX.Element => {
   return (
-    <div style={{ gap: 15, display: 'flex' }}>
+    <div style={{ gap: 15, display: 'flex', width: '100' }}>
       <div>{text}</div>
       <ArrowForwardIcon />
     </div>
