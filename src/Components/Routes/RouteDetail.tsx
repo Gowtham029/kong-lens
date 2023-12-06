@@ -16,7 +16,7 @@ import { toastDisable } from '../../Actions/toastActions';
 import Spinner from '../Features/spinner/Spinner';
 import { getCurrentRouteData } from '../../Actions/routeActions';
 import RouteEditor from './RouteEditor';
-import { getCurrentServicePluginData } from '../../Actions/serviceActions';
+import { getCurrentPagePluginData } from '../../Actions/pluginActions';
 
 const RouteDetail = (): JSX.Element => {
   const { id } = useParams();
@@ -40,7 +40,7 @@ const RouteDetail = (): JSX.Element => {
 
   React.useEffect(() => {
     dispatch(getCurrentRouteData(id as string));
-    dispatch(getCurrentServicePluginData(id as string, 'routes'));
+    dispatch(getCurrentPagePluginData(id as string, 'routes'));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

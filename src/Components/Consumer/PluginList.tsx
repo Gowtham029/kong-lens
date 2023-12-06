@@ -15,9 +15,11 @@ const PluginList = ({ pluginList }: pluginListProp): JSX.Element => {
       <List role="menubar" orientation="vertical">
         {pluginList.map((plugin) => {
           return (
-            <ListItem role="none">
-              <TagComponent tag={plugin.name} isList={false} />
-            </ListItem>
+            plugin.enabled && (
+              <ListItem role="none">
+                <TagComponent tag={plugin.name} isList={false} />
+              </ListItem>
+            )
           );
         })}
       </List>

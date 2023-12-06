@@ -48,6 +48,7 @@ function App(): JSX.Element {
             <Route path="/routes" element={<Home path="routes" />} />
             <Route path="/consumers" element={<Home path="consumers" />} />
             <Route path="/plugins" element={<Home path="plugins" />} />
+            <Route path="/plugins/add" element={<Home path="addPlugins" />} />
             <Route path="/upstreams" element={<Home path="upstreams" />} />
             <Route
               path="/certificates"

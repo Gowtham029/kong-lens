@@ -36,7 +36,7 @@ const RowComponent = ({
       <div>
         <div
           style={{
-            backgroundColor: backgroundColor || '#f5f5f5',
+            backgroundColor: backgroundColor || '#EDEDED',
             borderRadius: 10,
             padding: style && style.padding ? style.padding : 'auto',
             display: 'flex',
@@ -60,7 +60,7 @@ const RowComponent = ({
             <ArrowPointer text="Plugins" />
             <div
               style={{
-                display: 'flex', 
+                display: 'flex',
                 flexDirection: 'column',
               }}
             >

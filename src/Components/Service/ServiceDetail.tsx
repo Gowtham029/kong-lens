@@ -17,11 +17,11 @@ import Plugins from '../../Pages/Plugins';
 import { SnackBarAlert } from '../Features/SnackBarAlert';
 import {
   getCurrentServiceData,
-  getCurrentServicePluginData,
   getCurrentServiceRouteData,
 } from '../../Actions/serviceActions';
 import { toastDisable } from '../../Actions/toastActions';
 import Spinner from '../Features/spinner/Spinner';
+import { getCurrentPagePluginData } from '../../Actions/pluginActions';
 
 const ServiceDetail = (): JSX.Element => {
   const { id } = useParams();
@@ -56,7 +56,7 @@ const ServiceDetail = (): JSX.Element => {
     const put = (): void => {
       dispatch(getCurrentServiceData(id as string));
       dispatch(getCurrentServiceRouteData(id as string));
-      dispatch(getCurrentServicePluginData(id as string, 'services'));
+      dispatch(getCurrentPagePluginData(id as string, 'services'));
     };
     if (!param) {
       put();

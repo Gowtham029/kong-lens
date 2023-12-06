@@ -37,13 +37,6 @@ export const getCurrentServiceRouteData = (id: string) => {
   };
 };
 
-export const getCurrentServicePluginData = (id: string, type: string) => {
-  return {
-    type: ACTION_TYPES.GET_CURRENT_SERVICE_PLUGIN_DATA,
-    payload: { id, type },
-  };
-};
-
 export const patchCurrentServiceData = (data: any, id: string) => {
   return {
     type: ACTION_TYPES.PATCH_CURRENT_SERVICE_DATA,

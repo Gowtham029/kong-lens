@@ -5,7 +5,6 @@ import {
   watchDeleteServiceDataSaga,
   watchGetCurrentServiceDataSaga,
   watchGetServiceDataSaga,
-  watchGetServicePluginDataSaga,
   watchGetServiceRouteDataSaga,
   watchPatchServiceDataSaga,
   watchPostServiceDataSaga,
@@ -32,6 +31,7 @@ import {
   watchDeletePluginDataSaga,
   watchPatchPluginDataSaga,
   watchGetCurrentPluginDataSaga,
+  watchGetPagePluginDataSaga,
 } from './pluginSagas';
 import {
   watchGetDashboardDataSaga,
@@ -46,7 +46,7 @@ export default function* combinedSaga() {
     fork(watchGetRouteDataSaga),
     fork(watchDeleteRouteDataSaga),
     fork(watchGetCurrentServiceDataSaga),
-    fork(watchGetServicePluginDataSaga),
+    fork(watchGetPagePluginDataSaga),
     fork(watchPostServiceDataSaga),
     fork(watchPatchServiceDataSaga),
     fork(watchPatchRouteDataSaga),

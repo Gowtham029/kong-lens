@@ -22,7 +22,10 @@ import Spinner from '../Features/spinner/Spinner';
 import Routes from '../../Pages/Routes';
 import AccessibleRoutes from './AccessibleRoutes';
 import { getServiceData } from '../../Actions/serviceActions';
-import { getPluginData } from '../../Actions/pluginActions';
+import {
+  getCurrentPagePluginData,
+  getPluginData,
+} from '../../Actions/pluginActions';
 import { getRouteData } from '../../Actions/routeActions';
 import { ACTION_TYPES } from '../../Shared/actionTypes';
 import Plugins from '../../Pages/Plugins';
@@ -57,9 +60,9 @@ export default function ConsumerDetail(): JSX.Element {
   const { pluginData } = useSelector((state: any) => state.pluginReducer);
   const [tableData, setTableData] = React.useState<any>([]);
 
-  // React.useEffect(() => {
-  //   dispatch(getAccessibleRoutesAction('0a0aa590-1148-477a-9f0c-425836af7295'));
-  // }, [dispatch]);
+  React.useEffect(() => {
+    dispatch(getCurrentPagePluginData(id as string, 'consumers'));
+  }, [dispatch, id]);
 
   React.useEffect(() => {
     if (!serviceData.length) dispatch(getServiceData());

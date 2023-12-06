@@ -117,6 +117,26 @@ const RouteEditor = ({
     }
   };
 
+  // const getTextField = (text: any) => {
+  //   switch (text.type) {
+  //     case 'checkbox':
+  //       return state;
+  //     case ACTION_TYPES.SET_CONSUMER_DATA:
+  //       return action.payload;
+  //     case ACTION_TYPES.ADD_CONSUMER_DATA:
+  //       return [...state, action.payload];
+  //     case ACTION_TYPES.CONFIRM_CONSUMER_DELETE:
+  //       state.splice(action.index, 1);
+  //       return [...state];
+  //     default:
+  //       return state;
+  //   }
+  // };
+
+  const setOptionComponent = (option: any): JSX.Element => {
+    return option.map((value: any) => <Option value={value}>{value}</Option>);
+  };
+
   return (
     <>
       <SnackBarAlert
@@ -178,8 +198,7 @@ const RouteEditor = ({
                       value={formData[text.key as keyof typeof content]}
                       onChange={handlePathHandling}
                     >
-                      <Option value="v1">v1</Option>
-                      <Option value="v0">v0</Option>
+                      {setOptionComponent(text.option)}
                     </Select>
                   )}
                   {(text.type === 'number' || text.type === 'text') && (

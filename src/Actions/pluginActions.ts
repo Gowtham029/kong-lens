@@ -37,3 +37,10 @@ export const postCurrentPluginData = (data: any, func: NavigateFunction) => {
     navigate: func,
   };
 };
+
+export const getCurrentPagePluginData = (id: string, type: string) => {
+  return {
+    type: ACTION_TYPES.GET_CURRENT_PAGE_PLUGIN_DATA,
+    payload: { id, type },
+  };
+};

@@ -67,9 +67,40 @@ const currentPluginData = (
   }
 };
 
+const currentPagePluginData = (state = [], action: any) => {
+  switch (action.type) {
+    case ACTION_TYPES.GET_CURRENT_PAGE_PLUGIN_DATA:
+      return state;
+    case ACTION_TYPES.SET_CURRENT_PAGE_PLUGIN_DATA:
+      action.payload.forEach((data: any) => {
+        if (data.service == null) {
+          data.service = { id: 'All EntryPoints' };
+          data.scope = 'Global';
+        } else {
+          data.service;
+          data.scope = 'services';
+        }
+        if (data.consumer == null) {
+          data.consumer = { id: 'All Consumers' };
+          data.scope = 'Global';
+        } else data.consumer;
+        delete data.service;
+      });
+      return action.payload;
+    case ACTION_TYPES.ADD_CURRENT_PAGE_PLUGIN_DATA:
+      return [...state, action.payload];
+    case ACTION_TYPES.CONFIRM_PLUGIN_DELETE:
+      state.splice(action.index, 1);
+      return [...state];
+    default:
+      return state;
+  }
+};
+
 const pluginReducer = combineReducers({
   pluginData,
   tablePluginData,
   currentPluginData,
+  currentPagePluginData,
 });
 export default pluginReducer;

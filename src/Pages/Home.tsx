@@ -45,6 +45,7 @@ import ServiceDetail from '../Components/Service/ServiceDetail';
 import RouteDetail from '../Components/Routes/RouteDetail';
 import ConsumerDetail from '../Components/Consumer/ConsumerDetail';
 import { logOut } from '../Actions/loginActions';
+import GlobalPlugin from './GlobalPlugins';
 
 const drawerWidth = 240;
 
@@ -138,6 +139,7 @@ const renderPages: { [page: string]: JSX.Element } = {
   routes: <Routes nested={false} />,
   consumers: <Consumers />,
   plugins: <Plugins nested={false} />,
+  addPlugins: <GlobalPlugin />,
   upstreams: <Upstreams />,
   certificates: <Certificates />,
   users: <Users />,
@@ -332,7 +334,7 @@ export default function Home({ path }: HomeProps): JSX.Element {
           </ListItem>
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+      <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: '#F9F9F9' }}>
         <DrawerHeader />
         {currentPage}
         {/* <hr />

@@ -6,6 +6,7 @@ import { deletePlugin } from '../API/Plugin/deletePlugin';
 import { getCurrentPlugin } from '../API/Plugin/getCurrentPlugin';
 import { patchPlugin } from '../API/Plugin/patchPlugin';
 import { postPlugin } from '../API/Plugin/postPlugin';
+import { getPagePlugin } from '../API/Plugin/getPagePlugin';
 
 export function* watchGetPluginDataSaga(): any {
   yield takeEvery(ACTION_TYPES.GET_PLUGIN_DATA, getPluginData);
@@ -25,4 +26,8 @@ export function* watchPatchPluginDataSaga(): any {
 
 export function* watchDeletePluginDataSaga(): any {
   yield takeEvery(ACTION_TYPES.DELETE_CURRENT_PLUGIN_DATA, deletePlugin);
+}
+
+export function* watchGetPagePluginDataSaga(): any {
+  yield takeEvery(ACTION_TYPES.GET_CURRENT_PAGE_PLUGIN_DATA, getPagePlugin);
 }

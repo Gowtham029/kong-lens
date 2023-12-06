@@ -9,7 +9,7 @@ const MiniPageHeaderBox = ({
 }: PageHeaderIconProps): JSX.Element => (
   <Box
     sx={{
-      bgcolor: '#f5f5f5',
+      bgcolor: '#EDEDED',
       padding: '15px',
       width: '1000px',
       height: '110px',

@@ -8,7 +8,7 @@ import {
 } from '../../Shared/constants';
 import { ACTION_TYPES } from '../../Shared/actionTypes';
 
-export function* getServicePlugin(action: any): any {
+export function* getPagePlugin(action: any): any {
   try {
     yield put({ type: ACTION_TYPES.SET_LOADER_TRUE });
     const { data }: any = yield call(GET, {
@@ -16,7 +16,7 @@ export function* getServicePlugin(action: any): any {
       headers: { 'Access-Control-Allow-Origin': '*' },
     });
     yield put({
-      type: ACTION_TYPES.SET_CURRENT_SERVICE_PLUGIN_DATA,
+      type: ACTION_TYPES.SET_CURRENT_PAGE_PLUGIN_DATA,
       payload: data.data,
     });
     yield put({ type: ACTION_TYPES.SET_PLUGIN_RAW_VIEW, payload: data.data });

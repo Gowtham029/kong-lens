@@ -7,7 +7,7 @@ import { getService } from '../API/Service/getService';
 import { postService } from '../API/Service/postService';
 import { patchService } from '../API/Service/patchService';
 import { getServiceRoute } from '../API/Service/getServiceRoute';
-import { getServicePlugin } from '../API/Service/getServicePlugin';
+
 
 export function* watchGetServiceDataSaga(): any {
   yield takeEvery(ACTION_TYPES.GET_SERVICE_DATA, getServices);
@@ -33,9 +33,4 @@ export function* watchGetServiceRouteDataSaga(): any {
   yield takeEvery(ACTION_TYPES.GET_CURRENT_SERVICE_ROUTE_DATA, getServiceRoute);
 }
 
-export function* watchGetServicePluginDataSaga(): any {
-  yield takeEvery(
-    ACTION_TYPES.GET_CURRENT_SERVICE_PLUGIN_DATA,
-    getServicePlugin
-  );
-}
+

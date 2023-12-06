@@ -80,6 +80,7 @@ export type keyValueType = {
   key: string;
   value: string;
   type: string;
+  option: string[];
 };
 
 export type ServiceDetails = {
@@ -183,6 +184,7 @@ export type PageHeaderIconProps = {
 export type PageHeaderDescProps = {
   header: string;
   description: string;
+  component?: JSX.Element;
 };
 
 export type RawViewProps = {
@@ -213,10 +215,10 @@ export type PageTypeProps = {
   nested: boolean;
 };
 
-export type CreateRouteProps = {
+export type ModalOpenCLoseProps = {
   open: boolean;
   onClose: VoidFunction;
-  serviceName: string;
+  serviceName?: string;
 };
 
 export type LogOut = {

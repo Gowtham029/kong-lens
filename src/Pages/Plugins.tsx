@@ -29,6 +29,7 @@ import {
   patchCurrentPluginData,
 } from '../Actions/pluginActions';
 import { ToggleComponent } from '../Components/Features/ToggleComponent';
+import { CreatePlugins } from '../Components/Plugins/CreatePlugins';
 
 export default function Plugins({ nested }: PageTypeProps): JSX.Element {
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
@@ -46,16 +47,16 @@ export default function Plugins({ nested }: PageTypeProps): JSX.Element {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [status, execute, resolve, reject, reset] = useAwaitableComponent();
 
-  const { currentServicePluginData } = useSelector(
-    (state: any) => state.serviceReducer
+  const { currentPagePluginData } = useSelector(
+    (state: any) => state.pluginReducer
   );
 
   const { pluginData, tablePluginData } = useSelector(
     (state: any) => state.pluginReducer
   );
 
-  const tableData = nested ? currentServicePluginData : tablePluginData;
-
+  const tableData = nested ? currentPagePluginData : tablePluginData;
+  const [openPluginModal, setOpenPluginModal] = React.useState(false);
   const loadingData = useSelector((state: any) => state.loadingData);
 
   const navigate = useNavigate();
@@ -284,11 +285,15 @@ export default function Plugins({ nested }: PageTypeProps): JSX.Element {
                 },
               }}
               onClick={() => {
-                navigate(`/plugins/createPlugin/?newId=true`);
-                dispatch({
-                  type: ACTION_TYPES.SET_CURRENT_PLUGIN_DATA,
-                  payload: PLUGIN_DETAILS_INTERFACE,
-                });
+                if (!nested) {
+                  navigate(`/plugins/add`);
+                  dispatch({
+                    type: ACTION_TYPES.SET_CURRENT_PLUGIN_DATA,
+                    payload: PLUGIN_DETAILS_INTERFACE,
+                  });
+                } else {
+                  setOpenPluginModal(true);
+                }
               }}
               variant="contained"
             >
@@ -297,6 +302,10 @@ export default function Plugins({ nested }: PageTypeProps): JSX.Element {
           )}
         />
       )}
+      <CreatePlugins
+        open={openPluginModal}
+        onClose={() => setOpenPluginModal(false)}
+      />
       <DialogModal
         description="Really want to delete the selected item?"
         open={confirmDialogOpen}
