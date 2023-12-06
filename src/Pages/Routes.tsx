@@ -124,9 +124,10 @@ const Routes = ({ nested }: PageTypeProps): JSX.Element => {
         // eslint-disable-next-line react/no-unstable-nested-components
         Cell: ({ row }) => (
           <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            {row.original.tags.map((tag: string) => (
-              <TagComponent key={tag} tag={tag} isList={false} />
-            ))}
+            {row.original.tags &&
+              row.original.tags.map((tag: string) => (
+                <TagComponent key={tag} tag={tag} isList={false} />
+              ))}
           </div>
         ),
       },
@@ -155,16 +156,19 @@ const Routes = ({ nested }: PageTypeProps): JSX.Element => {
         // eslint-disable-next-line react/no-unstable-nested-components
         Cell: ({ row }) => (
           <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            {row.original.hosts.map((host: string, index: number) => (
-              <div key={host}>
-                <TagComponent
-                  tag={
-                    index !== row.original.hosts.length - 1 ? `${host},` : host
-                  }
-                  isList
-                />
-              </div>
-            ))}
+            {row.original.hosts &&
+              row.original.hosts.map((host: string, index: number) => (
+                <div key={host}>
+                  <TagComponent
+                    tag={
+                      index !== row.original.hosts.length - 1
+                        ? `${host},`
+                        : host
+                    }
+                    isList
+                  />
+                </div>
+              ))}
           </div>
         ),
       },
@@ -174,16 +178,19 @@ const Routes = ({ nested }: PageTypeProps): JSX.Element => {
         // eslint-disable-next-line react/no-unstable-nested-components
         Cell: ({ row }) => (
           <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-            {row.original.paths.map((path: string, index: number) => (
-              <div key={path}>
-                <TagComponent
-                  tag={
-                    index !== row.original.paths.length - 1 ? `${path},` : path
-                  }
-                  isList
-                />
-              </div>
-            ))}
+            {row.original.paths &&
+              row.original.paths.map((path: string, index: number) => (
+                <div key={path}>
+                  <TagComponent
+                    tag={
+                      index !== row.original.paths.length - 1
+                        ? `${path},`
+                        : path
+                    }
+                    isList
+                  />
+                </div>
+              ))}
           </div>
         ),
       },
@@ -195,17 +202,18 @@ const Routes = ({ nested }: PageTypeProps): JSX.Element => {
         // eslint-disable-next-line react/no-unstable-nested-components
         Cell: ({ row }) => (
           <div style={{ display: 'flex' }}>
-            {row.original.protocols.map((protocol: string, index: number) => (
-              <TagComponent
-                key={protocol}
-                tag={
-                  index !== row.original.protocols.length - 1
-                    ? `${protocol},`
-                    : protocol
-                }
-                isList
-              />
-            ))}
+            {row.original.protocols &&
+              row.original.protocols.map((protocol: string, index: number) => (
+                <TagComponent
+                  key={protocol}
+                  tag={
+                    index !== row.original.protocols.length - 1
+                      ? `${protocol},`
+                      : protocol
+                  }
+                  isList
+                />
+              ))}
           </div>
         ),
       },

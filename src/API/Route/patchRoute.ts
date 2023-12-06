@@ -30,6 +30,10 @@ export function* patchRoute(action: any): any {
     });
   } catch (error: any) {
     yield put({
+      type: ACTION_TYPES.SET_CURRENT_ROUTE_DATA,
+      payload: action.payload.data,
+    });
+    yield put({
       type: ACTION_TYPES.TOAST_NOTIFICATION,
       payload: {
         message: error.response

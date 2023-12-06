@@ -34,6 +34,7 @@ export function* getRoutes(): any {
       },
     });
     yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
+    return data;
   } catch (error: any) {
     yield put({
       type: ACTION_TYPES.TOAST_NOTIFICATION,
@@ -47,4 +48,5 @@ export function* getRoutes(): any {
   } finally {
     yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
   }
+  return null;
 }

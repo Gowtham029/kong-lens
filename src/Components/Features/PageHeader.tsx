@@ -6,6 +6,7 @@ import { PageHeaderDescProps } from '../../interfaces';
 const PageHeaderBox = ({
   header,
   description,
+  component,
 }: PageHeaderDescProps): JSX.Element => {
   React.useEffect(() => {
     //
@@ -13,7 +14,7 @@ const PageHeaderBox = ({
   return (
     <Box
       sx={{
-        bgcolor: '#f5f5f5',
+        bgcolor: '#EDEDED',
         padding: '15px',
         width: '1250px',
         height: '110px',
@@ -25,15 +26,18 @@ const PageHeaderBox = ({
       }}
     >
       <h3 style={{ fontSize: '28px', margin: '10px 0 11.5px' }}>{header}</h3>
-      <p
-        style={{
-          fontSize: '14px',
-          color: '#a6a6a6',
-          margin: '5px 0 10px',
-        }}
-      >
-        {parse(description)}
-      </p>
+      {description && (
+        <p
+          style={{
+            fontSize: '14px',
+            color: '#a6a6a6',
+            margin: '5px 0 10px',
+          }}
+        >
+          {parse(description)}
+        </p>
+      )}
+      {component}
     </Box>
   );
 };
@@ -41,6 +45,13 @@ const PageHeaderBox = ({
 export default function PageHeader({
   header,
   description,
+  component,
 }: PageHeaderDescProps): JSX.Element {
-  return <PageHeaderBox header={header} description={description} />;
+  return (
+    <PageHeaderBox
+      header={header}
+      description={description}
+      component={component}
+    />
+  );
 }

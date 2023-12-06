@@ -9,10 +9,11 @@ import StorageIcon from '@mui/icons-material/Storage';
 import { useSelector, useDispatch } from 'react-redux';
 import PluginBox from '../Components/Features/PluginBox';
 import InfoBox from '../Components/Features/InfoBox';
-import { GET } from '../Helpers/ApiHelpers';
-import { BASE_API_URL } from '../Shared/constants';
 import Spinner from '../Components/Features/spinner/Spinner';
-import { ACTION_TYPES } from '../Shared/actionTypes';
+import {
+  getDashboardData,
+  getDashboardResultData,
+} from '../Actions/dashboardActions';
 
 // Define the container for the three boxes
 const BoxContainer = styled(Box)({
@@ -66,8 +67,13 @@ const keyValues3 = [
 ];
 
 export const Dashboard = (): JSX.Element => {
-  const [apiData, setApiData] = useState<any>({});
-  const [apiConnectionData, setApiConnectionData] = useState<any>({});
+  const apiConnectionData: any = useSelector(
+    (state: any) => state.dashboardReducer.dashboardConnectionReducer
+  );
+  const apiData: any = useSelector(
+    (state: any) => state.dashboardReducer.dashboardResultReducer
+  );
+
   const [infoData, setInfoData] = useState<any>([]);
   const [connectionsData, setConnectionsData] = useState<any>([]);
   const [dbData, setDBData] = useState<any>([]);
@@ -76,14 +82,16 @@ export const Dashboard = (): JSX.Element => {
   // Use useEffect to fetch API data on component mount
   useEffect(() => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    async function getData(): Promise<any> {
-      const result = await GET({ url: BASE_API_URL });
-      const connections = await GET({ url: `${BASE_API_URL}/status` });
-      setApiData(result.data);
-      setApiConnectionData(connections.data);
-      dispatch({ type: ACTION_TYPES.SET_LOADER_FALSE });
-    }
-    getData();
+    // async function getData(): Promise<any> {
+    //   const result = await GET({ url: BASE_API_URL });
+    //   const connections = await GET({ url: `${BASE_API_URL}/status` });
+    //   setApiData(result.data);
+    //   setApiConnectionData(connections.data);
+    //   dispatch({ type: ACTION_TYPES.SET_LOADER_FALSE });
+    // }
+    // getData();
+    dispatch(getDashboardData());
+    dispatch(getDashboardResultData());
   }, [dispatch]);
 
   // Use useEffect to update the infoData state after apiData has changed

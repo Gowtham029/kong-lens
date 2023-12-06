@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Navigate,
   Route,
@@ -7,7 +7,7 @@ import {
   useLocation,
   useNavigate,
 } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import Home from './Pages/Home';
 import Login from './Pages/Login';
 import AuthVerify from './Pages/AuthVerify';
@@ -15,10 +15,11 @@ import { logOut, preserveRoute, setLoginToken } from './Actions/loginActions';
 import { ACTION_TYPES } from './Shared/actionTypes';
 
 function App(): JSX.Element {
+  const [user, setUser] = useState({ user: '', token: '' });
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const { loginUser } = useSelector((state: any) => state.loginReducer);
+  let userAccess;
   const logout = useCallback(() => {
     dispatch(logOut(navigate));
     dispatch(preserveRoute(true));
@@ -28,23 +29,18 @@ function App(): JSX.Element {
     });
   }, [dispatch, navigate]);
   useEffect(() => {
-    if (localStorage.getItem('user') !== null) {
-      const user = localStorage.getItem('user.user');
-      const token = localStorage.getItem('user.token');
-      dispatch(setLoginToken({ user, token }));
-      if (location.pathname === '/login') navigate(-1);
+    const userToken = localStorage.getItem('user') as string;
+    const userObject = JSON.parse(userToken);
+    setUser(userObject);
+    if (userObject && userObject.token !== null) {
+      dispatch(setLoginToken(userObject));
+      if (location.pathname === '/') navigate(-1);
     }
-  }, [dispatch, location.pathname, navigate]);
+  }, [dispatch, location.pathname, navigate, userAccess]);
   return (
     <>
       <Routes>
-        {!loginUser.isAuthenticated && (
-          <>
-            <Route path="/login" element={<Login />} />
-            <Route path="/" element={<Navigate to="/login" replace />} />
-          </>
-        )}
-        {loginUser.isAuthenticated && (
+        {user && user.token && (
           <>
             <Route path="/dashboard" element={<Home path="dashboard" />} />
             <Route path="/info" element={<Home path="info" />} />
@@ -52,6 +48,7 @@ function App(): JSX.Element {
             <Route path="/routes" element={<Home path="routes" />} />
             <Route path="/consumers" element={<Home path="consumers" />} />
             <Route path="/plugins" element={<Home path="plugins" />} />
+            <Route path="/plugins/add" element={<Home path="addPlugins" />} />
             <Route path="/upstreams" element={<Home path="upstreams" />} />
             <Route
               path="/certificates"
@@ -67,9 +64,17 @@ function App(): JSX.Element {
             />
             <Route path="/routes/:id/" element={<Home path="routesDetail" />} />
             <Route
-              path="/consumers/:id"
+              path="/consumers/:id/"
               element={<Home path="consumerDetail" />}
             />
+            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          </>
+        )}
+        {!user && (
+          <>
+            <Route path="/" element={<Login />} />
+            {/* <Route path="/" element={<Navigate to="/login" replace />} /> */}
+            <Route path="*" element={<Navigate to="/" replace />} />
           </>
         )}
       </Routes>

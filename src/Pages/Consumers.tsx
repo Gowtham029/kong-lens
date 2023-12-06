@@ -98,7 +98,7 @@ export default function Consumers(): JSX.Element {
         size: 140,
         muiTableBodyCellProps: ({ cell }) => ({
           onClick: () => {
-            navigate(`/consumers/${cell.row.original.username}?newId=false`);
+            navigate(`/consumers/${cell.row.original.id}?newId=false`);
           },
           sx: {
             cursor: 'pointer',

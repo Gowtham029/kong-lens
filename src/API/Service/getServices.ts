@@ -12,7 +12,7 @@ export function* getServices(): any {
   try {
     yield put({ type: ACTION_TYPES.SET_LOADER_TRUE });
     let { data }: any = yield call(GET, {
-      url: `${BASE_API_URL}/services/`,
+      url: `${BASE_API_URL}/services?size=1000`,
       headers: { 'Access-Control-Allow-Origin': '*' },
     });
     data = yield data.data;
@@ -26,6 +26,7 @@ export function* getServices(): any {
         severity: 'success',
       },
     });
+    return data;
   } catch (error: any) {
     yield put({
       type: ACTION_TYPES.TOAST_NOTIFICATION,
@@ -39,4 +40,5 @@ export function* getServices(): any {
   } finally {
     yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
   }
+  return null;
 }

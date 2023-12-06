@@ -34,7 +34,7 @@ export interface RouteDetails {
   regex_priority: any;
   headers: any;
   id?: any;
-  hosts: any;
+  hosts: any | [];
   name: any;
   created_at?: any;
   updated_at?: any;
@@ -80,6 +80,7 @@ export type keyValueType = {
   key: string;
   value: string;
   type: string;
+  option: string[];
 };
 
 export type ServiceDetails = {
@@ -106,6 +107,34 @@ export type ConsumerDetails = {
   tags: any;
   created_at?: any;
   id: any;
+};
+
+export type PluginDetails = {
+  consumer: any;
+  id: any;
+  service: any;
+  protocols: any;
+  name: any;
+  enabled: any;
+  config: {
+    anonymous: any;
+    hide_credentials: any;
+  };
+  route: any;
+  tags: any;
+  created_at?: any;
+};
+
+export type PluginData = {
+  consumer: any;
+  id: any;
+  service: any;
+  name: any;
+  scope: string;
+  enabled: boolean;
+  haveService: boolean;
+  haveConsumer: boolean;
+  created_at: any;
 };
 
 export type RouteEditorProps = {
@@ -155,6 +184,7 @@ export type PageHeaderIconProps = {
 export type PageHeaderDescProps = {
   header: string;
   description: string;
+  component?: JSX.Element;
 };
 
 export type RawViewProps = {
@@ -173,6 +203,7 @@ export type DetailViewerProps = {
 export type toggleProps = {
   yes: boolean;
   onChange: VoidFunction;
+  size?: any;
 };
 
 export type TagProps = {
@@ -184,10 +215,10 @@ export type PageTypeProps = {
   nested: boolean;
 };
 
-export type CreateRouteProps = {
+export type ModalOpenCLoseProps = {
   open: boolean;
   onClose: VoidFunction;
-  serviceName: string;
+  serviceName?: string;
 };
 
 export type LogOut = {

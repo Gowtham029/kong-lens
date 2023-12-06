@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { takeEvery, takeLatest } from 'redux-saga/effects';
+import { takeEvery } from 'redux-saga/effects';
 import { getServices } from '../API/Service/getServices';
 import { ACTION_TYPES } from '../Shared/actionTypes';
 import { deleteService } from '../API/Service/deleteService';
@@ -8,12 +8,13 @@ import { postService } from '../API/Service/postService';
 import { patchService } from '../API/Service/patchService';
 import { getServiceRoute } from '../API/Service/getServiceRoute';
 
+
 export function* watchGetServiceDataSaga(): any {
-  yield takeLatest([ACTION_TYPES.GET_SERVICE_DATA], getServices);
+  yield takeEvery(ACTION_TYPES.GET_SERVICE_DATA, getServices);
 }
 
 export function* watchGetCurrentServiceDataSaga(): any {
-  yield takeLatest([ACTION_TYPES.GET_CURRENT_SERVICE_DATA], getService);
+  yield takeEvery(ACTION_TYPES.GET_CURRENT_SERVICE_DATA, getService);
 }
 
 export function* watchPostServiceDataSaga(): any {
@@ -21,16 +22,15 @@ export function* watchPostServiceDataSaga(): any {
 }
 
 export function* watchPatchServiceDataSaga(): any {
-  yield takeLatest([ACTION_TYPES.PATCH_CURRENT_SERVICE_DATA], patchService);
+  yield takeEvery(ACTION_TYPES.PATCH_CURRENT_SERVICE_DATA, patchService);
 }
 
 export function* watchDeleteServiceDataSaga(): any {
-  yield takeLatest([ACTION_TYPES.DELETE_SERVICE_DATA], deleteService);
+  yield takeEvery(ACTION_TYPES.DELETE_SERVICE_DATA, deleteService);
 }
 
 export function* watchGetServiceRouteDataSaga(): any {
-  yield takeLatest(
-    [ACTION_TYPES.GET_CURRENT_SERVICE_ROUTE_DATA],
-    getServiceRoute
-  );
+  yield takeEvery(ACTION_TYPES.GET_CURRENT_SERVICE_ROUTE_DATA, getServiceRoute);
 }
+
+

@@ -8,7 +8,7 @@ import {
   ModalDialog,
 } from '@mui/joy';
 import { useSelector } from 'react-redux';
-import { CreateRouteProps } from '../../interfaces';
+import { ModalOpenCLoseProps } from '../../interfaces';
 import { ROUTE_TEXT_FIELDS } from '../../Shared/constants';
 import RouteEditor from '../Routes/RouteEditor';
 
@@ -16,7 +16,7 @@ export const CreateRoute = ({
   open,
   onClose,
   serviceName,
-}: CreateRouteProps): JSX.Element => {
+}: ModalOpenCLoseProps): JSX.Element => {
   const routeData = useSelector(
     (state: any) => state.routeReducer.currentRouteData
   );

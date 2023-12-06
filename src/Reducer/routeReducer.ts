@@ -53,9 +53,19 @@ const currentRouteData = (state = ROUTE_DETAILS_INTERFACE, action: any) => {
   }
 };
 
+const routePluginsData = (state = {}, action: any) => {
+  switch (action.type) {
+    case ACTION_TYPES.SET_ROUTE_PLUGIN_DATA:
+      return { ...state, [action.payload.id]: action.payload.data };
+    default:
+      return state;
+  }
+};
+
 const routeReducer = combineReducers({
   routeData,
   isRouteOpen,
   currentRouteData,
+  routePluginsData,
 });
 export default routeReducer;

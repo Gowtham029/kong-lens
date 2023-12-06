@@ -37,3 +37,10 @@ export const postCurrentConsumerData = (data: any, func: NavigateFunction) => {
     navigate: func,
   };
 };
+
+export const getAccessibleRoutesAction = (id: any) => {
+  return {
+    type: ACTION_TYPES.GET_CONSUMER_ACCESS_ROUTES,
+    payload: id,
+  };
+};

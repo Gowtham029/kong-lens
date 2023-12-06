@@ -38,8 +38,20 @@ const currentConsumerData = (
   }
 };
 
+const accessibleRoutes = (state = {}, action: { type: any; payload: any }) => {
+  switch (action.type) {
+    case ACTION_TYPES.SET_ACCESS_ROUTE_DATA:
+      return action.payload;
+    case ACTION_TYPES.GET_ACCESS_ROUTE_DATA:
+      return action.payload;
+    default:
+      return state;
+  }
+};
+
 const consumerReducer = combineReducers({
   consumerData,
   currentConsumerData,
+  accessibleRoutes,
 });
 export default consumerReducer;
