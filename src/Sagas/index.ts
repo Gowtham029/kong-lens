@@ -24,6 +24,7 @@ import {
   watchGetCurrentConsumerDataSaga,
   watchPatchConsumerDataSaga,
   watchPostConsumerDataSaga,
+  watchGetCurrentConsumerCredsSaga,
 } from './consumerSagas';
 import {
   watchGetPluginDataSaga,
@@ -37,6 +38,12 @@ import {
   watchGetDashboardDataSaga,
   watchGetDashboardResultDataSaga,
 } from './dashboardSagas';
+import {
+  watchDeleteUpstreamDataSaga,
+  watchGetCurrentUpstreamDataSaga,
+  watchGetUpstreamsDataSaga,
+  watchPostUpstreamDataSaga,
+} from './upstreamsSagas';
 
 export default function* combinedSaga() {
   yield all([
@@ -66,5 +73,10 @@ export default function* combinedSaga() {
     fork(watchGetDashboardDataSaga),
     fork(watchGetDashboardResultDataSaga),
     fork(watchGetRoutePluginsDataSaga),
+    fork(watchGetCurrentConsumerCredsSaga),
+    fork(watchGetUpstreamsDataSaga),
+    fork(watchGetCurrentUpstreamDataSaga),
+    fork(watchDeleteUpstreamDataSaga),
+    fork(watchPostUpstreamDataSaga),
   ]);
 }

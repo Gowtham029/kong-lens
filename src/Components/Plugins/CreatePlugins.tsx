@@ -28,6 +28,7 @@ import { addPlugins } from '../../Shared/constants';
 export const CreatePlugins = ({
   open,
   onClose,
+  nested,
 }: ModalOpenCLoseProps): JSX.Element => {
   const navBarValueList: any = {
     Security: {
@@ -80,6 +81,7 @@ export const CreatePlugins = ({
   const [currentPage, setCurrentPage] = React.useState(
     navBarValueList.Security.value
   );
+
   return (
     <Modal
       aria-labelledby="modal-title"
@@ -110,6 +112,7 @@ export const CreatePlugins = ({
             ADD PLUGIN
           </Typography>
           <Divider />
+
           <br />
           <Tabs
             defaultValue={currentPage}
@@ -151,6 +154,7 @@ export const CreatePlugins = ({
               navBarValueList={navBarValueList}
               currentPage={currentPage}
               showType="separate"
+              nested={nested as boolean}
             />
           </Tabs>
         </ModalDialog>

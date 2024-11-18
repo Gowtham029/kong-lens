@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react';
@@ -7,6 +8,7 @@ import InfoIcon from '@mui/icons-material/Info';
 import LanIcon from '@mui/icons-material/Lan';
 import StorageIcon from '@mui/icons-material/Storage';
 import { useSelector, useDispatch } from 'react-redux';
+import ExtensionSharpIcon from '@mui/icons-material/ExtensionSharp';
 import PluginBox from '../Components/Features/PluginBox';
 import InfoBox from '../Components/Features/InfoBox';
 import Spinner from '../Components/Features/spinner/Spinner';
@@ -77,22 +79,14 @@ export const Dashboard = (): JSX.Element => {
   const [infoData, setInfoData] = useState<any>([]);
   const [connectionsData, setConnectionsData] = useState<any>([]);
   const [dbData, setDBData] = useState<any>([]);
+  const [pluginData, setPluginData] = useState<any>([]);
+  const [enabledPluginData, setEnabledPluginData] = useState<any>([]);
   const loadingData = useSelector((state: any) => state.loadingData);
   const dispatch = useDispatch();
-  // Use useEffect to fetch API data on component mount
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    // async function getData(): Promise<any> {
-    //   const result = await GET({ url: BASE_API_URL });
-    //   const connections = await GET({ url: `${BASE_API_URL}/status` });
-    //   setApiData(result.data);
-    //   setApiConnectionData(connections.data);
-    //   dispatch({ type: ACTION_TYPES.SET_LOADER_FALSE });
-    // }
-    // getData();
     dispatch(getDashboardData());
     dispatch(getDashboardResultData());
-  }, [dispatch]);
+  }, []);
 
   // Use useEffect to update the infoData state after apiData has changed
   useEffect(() => {
@@ -143,7 +137,13 @@ export const Dashboard = (): JSX.Element => {
     setInfoData(data);
     setConnectionsData(connectionsValues);
     setDBData(dbValues);
+    if (apiData.plugins && apiData.plugins.available_on_server)
+      setPluginData(Object.keys(apiData.plugins.available_on_server));
+    if (apiData.plugins && apiData.plugins.enabled_in_cluster)
+      setEnabledPluginData(apiData.plugins.enabled_in_cluster);
   }, [apiConnectionData, apiData]);
+
+  const header = 'PLUGINS';
   return (
     <Box>
       {loadingData ? (
@@ -157,7 +157,16 @@ export const Dashboard = (): JSX.Element => {
           </BoxContainer>
           <br />
           <br />
-          <PluginBox />
+          <PluginBox
+            icon={
+              <span>
+                <ExtensionSharpIcon />
+              </span>
+            }
+            header={header}
+            chips={pluginData}
+            coloredChipNames={enabledPluginData}
+          />
         </>
       )}
     </Box>

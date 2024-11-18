@@ -5,11 +5,10 @@ import { useParams } from 'react-router-dom';
 import { IconInfoCircle } from '@tabler/icons-react';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import { useDispatch, useSelector } from 'react-redux';
-import { Tab, TabList, TabPanel, Tabs } from '@mui/joy';
+import { Tab, TabList, TabPanel, Tabs, tabClasses } from '@mui/joy';
 import PageHeader from '../Features/PageHeader';
 import MiniPageHeader from '../Features/MiniPageHeader';
 import { ROUTE_TEXT_FIELDS } from '../../Shared/constants';
-import { navBarProps } from '../../interfaces';
 import Plugins from '../../Pages/Plugins';
 import { SnackBarAlert } from '../Features/SnackBarAlert';
 import { toastDisable } from '../../Actions/toastActions';
@@ -23,13 +22,6 @@ const RouteDetail = (): JSX.Element => {
 
   const dispatch = useDispatch();
 
-  const list: navBarProps[] = [
-    { value: 'Route Details', icon: <IconInfoCircle /> },
-    { value: 'Plugins', icon: <ExtensionIcon /> },
-  ];
-
-  const [currentPage, setCurrentPage] = React.useState(list[0].value);
-
   const { isOpen, toastMessage } = useSelector(
     (state: any) => state.toastReducer
   );
@@ -40,20 +32,37 @@ const RouteDetail = (): JSX.Element => {
 
   React.useEffect(() => {
     dispatch(getCurrentRouteData(id as string));
-    dispatch(getCurrentPagePluginData(id as string, 'routes'));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const renderComponent = {
-    'Route Details': (
-      <RouteEditor
-        content={currentRouteData}
-        textFields={ROUTE_TEXT_FIELDS}
-        param
-      />
-    ),
-    Plugins: <Plugins nested />,
+  const onClickPageFunctions = (page: string): any => {
+    switch (page) {
+      case 'Route Details': {
+        return dispatch(getCurrentRouteData(id as string));
+      }
+      case 'Plugins': {
+        return dispatch(getCurrentPagePluginData(id as string, 'routes'));
+      }
+      default:
+        return null;
+    }
   };
+  const list: any = [
+    {
+      value: 'Route Details',
+      icon: <IconInfoCircle />,
+      comp: (
+        <RouteEditor
+          content={currentRouteData}
+          textFields={ROUTE_TEXT_FIELDS}
+          param
+        />
+      ),
+    },
+    { value: 'Plugins', icon: <ExtensionIcon />, comp: <Plugins nested /> },
+  ];
+
+  const [currentPage, setCurrentPage] = React.useState(list[0].value);
 
   return (
     <Box sx={{ width: '1250px', margin: 'auto' }}>
@@ -74,27 +83,38 @@ const RouteDetail = (): JSX.Element => {
       <br />
       <Divider />
       <Tabs
-        defaultValue={currentPage}
+        defaultValue={0}
         sx={{
           width: '1250px',
           margin: 'auto',
           display: 'flex',
           justifyContent: 'space-between',
+          bgcolor: 'transparent',
+          height: 'fit-content',
         }}
         orientation="vertical"
-        onChange={(event, value) => {
-          setCurrentPage(value as string);
+        onChange={(event, value: any) => {
+          setCurrentPage(list[value].value as string);
+          onClickPageFunctions(list[value].value as string);
         }}
       >
-        <TabList variant="plain" sx={{ gap: '5px' }}>
-          {list.map((tab) => (
-            <Tab
-              value={tab.value}
-              sx={{
-                background: tab.value === currentPage ? '#1ABB9C' : 'white',
-                width: '200px',
-              }}
-            >
+        <TabList
+          disableUnderline
+          variant="soft"
+          sx={{
+            p: 0.5,
+            gap: 0.5,
+            borderRadius: 'xl',
+            bgcolor: 'background.level1',
+            [`& .${tabClasses.root}[aria-selected="true"]`]: {
+              boxShadow: 'sm',
+              bgcolor: 'background.surface',
+            },
+            height: 'fit-content',
+          }}
+        >
+          {list.map((tab: any, index: any) => (
+            <Tab value={index} variant="plain" disableIndicator>
               <Box
                 sx={{
                   display: 'flex',
@@ -119,9 +139,9 @@ const RouteDetail = (): JSX.Element => {
           {loadingData ? (
             <Spinner />
           ) : (
-            <TabPanel value={currentPage}>
-              {renderComponent[currentPage as keyof typeof renderComponent]}
-            </TabPanel>
+            list.map((tab: any, index: any) => (
+              <TabPanel value={index}>{tab.comp}</TabPanel>
+            ))
           )}
         </Box>
       </Tabs>

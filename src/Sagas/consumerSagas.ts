@@ -1,9 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { takeEvery } from 'redux-saga/effects';
+import { takeEvery, takeLatest } from 'redux-saga/effects';
 import { ACTION_TYPES } from '../Shared/actionTypes';
 import { getConsumerData } from '../API/Consumer/getConsumerData';
 import { deleteConsumer } from '../API/Consumer/deleteConsumer';
-import { getCurrentConsumer } from '../API/Consumer/getCurrentConusmer';
+import {
+  getCurrentConsumer,
+  getCurrentConsumerCreds,
+} from '../API/Consumer/getCurrentConusmer';
 import { patchConsumer } from '../API/Consumer/patchConsumer';
 import { postConsumer } from '../API/Consumer/postConsumer';
 
@@ -25,4 +28,11 @@ export function* watchPatchConsumerDataSaga(): any {
 
 export function* watchDeleteConsumerDataSaga(): any {
   yield takeEvery([ACTION_TYPES.DELETE_CURRENT_CONSUMER_DATA], deleteConsumer);
+}
+
+export function* watchGetCurrentConsumerCredsSaga():any{
+  yield takeEvery(
+    [ACTION_TYPES.GET_CONSUMER_CREDS_DATA],
+    getCurrentConsumerCreds
+  );
 }

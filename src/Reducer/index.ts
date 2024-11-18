@@ -11,6 +11,7 @@ import loginReducer from './loginReducer';
 import consumerReducer from './consumerReducer';
 import pluginReducer from './pluginReducer';
 import dashboardReducer from './dashboardReducer';
+import upstreamReducer from './upstreamReducer';
 
 const rootReducer = combineReducers({
   loadingData,
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   consumerReducer,
   pluginReducer,
   dashboardReducer,
+  upstreamReducer,
 });
 
 export default rootReducer;

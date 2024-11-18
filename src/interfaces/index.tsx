@@ -47,7 +47,7 @@ export type Menus = {
 export type PluginBoxContainerProps = {
   icon: React.ReactNode;
   header: string;
-  chips: { name: string; flag: boolean }[];
+  chips: string[];
   coloredChipNames: string[];
 };
 
@@ -78,9 +78,10 @@ export type DialogModalProps = {
 
 export type keyValueType = {
   key: string;
-  value: string;
+  help: string;
   type: string;
   option: string[];
+  between: number[];
 };
 
 export type ServiceDetails = {
@@ -107,6 +108,28 @@ export type ConsumerDetails = {
   tags: any;
   created_at?: any;
   id: any;
+};
+
+export type UpstreamsDetails = {
+  algorithm: any;
+  client_certificate: any;
+  created_at: any;
+  hash_fallback: any;
+  hash_fallback_header: any;
+  hash_fallback_query_arg: any;
+  hash_fallback_uri_capture: any;
+  hash_on: any;
+  hash_on_cookie: any;
+  hash_on_cookie_path: any;
+  hash_on_header: any;
+  hash_on_query_arg: any;
+  hash_on_uri_capture: any;
+  healthchecks: any;
+  host_header: any;
+  id: any;
+  name: any;
+  slots: any;
+  tags: any;
 };
 
 export type PluginDetails = {
@@ -141,6 +164,19 @@ export type RouteEditorProps = {
   content: RouteDetails;
   textFields: keyValueType[];
   param: boolean;
+};
+
+export type EditorProps = {
+  content: any;
+  textFields: keyValueType[];
+  handleOnCancel: any;
+  handleOnSubmit: any;
+  formData: any;
+  setFormData: any;
+  requiredCancel: any;
+  submitText: any;
+  headerDescription?: any;
+  currentPage?: any;
 };
 
 export type ServiceEditorProps = {
@@ -180,6 +216,8 @@ export type MenuItemProps = {
 export type PageHeaderIconProps = {
   header: string;
   icon: JSX.Element;
+  button?: JSX.Element;
+  style?: object;
 };
 export type PageHeaderDescProps = {
   header: string;
@@ -219,6 +257,9 @@ export type ModalOpenCLoseProps = {
   open: boolean;
   onClose: VoidFunction;
   serviceName?: string;
+  component?: JSX.Element;
+  headerDescription?: string;
+  nested?: boolean;
 };
 
 export type LogOut = {

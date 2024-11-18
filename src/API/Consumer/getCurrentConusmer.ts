@@ -16,7 +16,40 @@ export function* getCurrentConsumer(action: any): any {
       headers: { 'Access-Control-Allow-Origin': '*' },
     });
     yield put({ type: ACTION_TYPES.SET_CURRENT_CONSUMER_DATA, payload: data });
+    yield put({
+      type: ACTION_TYPES.TOAST_NOTIFICATION,
+      payload: {
+        message: API_RESPONSE_SNACK_MESSAGE.fetchedData,
+        severity: 'success',
+      },
+    });
+  } catch (error: any) {
+    yield put({
+      type: ACTION_TYPES.TOAST_NOTIFICATION,
+      payload: {
+        message: error.response
+          ? error.response.data.message
+          : API_RESPONSE_SNACK_MESSAGE.unableToFetchData,
+        severity: 'error',
+      },
+    });
+  } finally {
     yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
+  }
+}
+
+export function* getCurrentConsumerCreds(action: any): any {
+  try {
+    yield put({ type: ACTION_TYPES.SET_LOADER_TRUE });
+    const { data }: any = yield call(GET, {
+      url: `${BASE_API_URL}/consumers/${action.payload.id}/${action.payload.type}`,
+      headers: { 'Access-Control-Allow-Origin': '*' },
+    });
+    console.log(data, 'dataaa');
+    yield put({
+      type: ACTION_TYPES.SET_CONSUMER_CREDS_DATA,
+      payload: { data, type: action.payload.type },
+    });
     yield put({
       type: ACTION_TYPES.TOAST_NOTIFICATION,
       payload: {

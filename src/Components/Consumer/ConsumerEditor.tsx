@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-param-reassign */
 import * as React from 'react';
@@ -154,7 +155,7 @@ const ConsumerEditor = ({
                     />
                   )}
                   <span style={{ fontSize: '13px', color: '#B2B2B2' }}>
-                    {text.value}
+                    {text.help}
                   </span>
                 </div>
               ))}

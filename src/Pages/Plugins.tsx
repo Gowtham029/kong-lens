@@ -257,7 +257,13 @@ export default function Plugins({ nested }: PageTypeProps): JSX.Element {
                   <Delete />
                 </ActionIcon>
               </Tooltip>
-              <Tooltip arrow placement="right-end" title="Toggle Enable">
+              <Tooltip
+                arrow
+                placement="right-end"
+                title={
+                  row.original.enabled ? 'Toggle Disable' : 'Toggle Enable'
+                }
+              >
                 <ActionIcon color="red">
                   <ToggleComponent
                     yes={row.original.enabled}
@@ -304,6 +310,7 @@ export default function Plugins({ nested }: PageTypeProps): JSX.Element {
       )}
       <CreatePlugins
         open={openPluginModal}
+        nested={nested}
         onClose={() => setOpenPluginModal(false)}
       />
       <DialogModal
@@ -311,7 +318,7 @@ export default function Plugins({ nested }: PageTypeProps): JSX.Element {
         open={confirmDialogOpen}
         onClose={() => {
           setConfirmDialogOpen(false);
-          reject(promise);
+          reset();
         }}
         onConfirm={() => {
           handleConfirmDelete();

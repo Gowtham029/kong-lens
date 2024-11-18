@@ -21,7 +21,7 @@ import AltRouteIcon from '@mui/icons-material/AltRoute';
 import PersonIcon from '@mui/icons-material/Person';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import StreamIcon from '@mui/icons-material/Stream';
-import SecurityIcon from '@mui/icons-material/Security';
+import PowerIcon from '@mui/icons-material/Power';
 import InfoIcon from '@mui/icons-material/Info';
 import CastIcon from '@mui/icons-material/Cast';
 import FolderCopyIcon from '@mui/icons-material/FolderCopy';
@@ -46,6 +46,7 @@ import RouteDetail from '../Components/Routes/RouteDetail';
 import ConsumerDetail from '../Components/Consumer/ConsumerDetail';
 import { logOut } from '../Actions/loginActions';
 import GlobalPlugin from './GlobalPlugins';
+import UpstreamDetail from '../Components/Upstreams/UpstreamDetail';
 
 const drawerWidth = 240;
 
@@ -148,7 +149,8 @@ const renderPages: { [page: string]: JSX.Element } = {
   settings: <Settings />,
   servicesDetail: <ServiceDetail />,
   routesDetail: <RouteDetail />,
-  consumerDetail: <ConsumerDetail />,
+  consumersDetail: <ConsumerDetail />,
+  upstreamsDetail: <UpstreamDetail />,
 };
 
 type HomeProps = {
@@ -281,7 +283,7 @@ export default function Home({ path }: HomeProps): JSX.Element {
               open={open}
               handlePageRender={handlePageRender}
               page="plugins"
-              icon={<ExtensionIcon />}
+              icon={<PowerIcon />}
               curLocation={path}
             />
             <MenuItem
@@ -295,7 +297,19 @@ export default function Home({ path }: HomeProps): JSX.Element {
               open={open}
               handlePageRender={handlePageRender}
               page="certificates"
-              icon={<SecurityIcon />}
+              icon={
+                <img
+                  src={
+                    // eslint-disable-next-line no-nested-ternary
+                    open
+                      ? 'certificate.svg'
+                      : path.includes('certificates')
+                      ? 'certificate-centered.svg'
+                      : 'certificate2.svg'
+                  }
+                  alt="certificate"
+                />
+              }
               curLocation={path}
             />
           </ListItem>
@@ -334,7 +348,10 @@ export default function Home({ path }: HomeProps): JSX.Element {
           </ListItem>
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3, bgcolor: '#F9F9F9' }}>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, p: 3, bgcolor: '#F9F9F9', height: 'auto' }}
+      >
         <DrawerHeader />
         {currentPage}
         {/* <hr />

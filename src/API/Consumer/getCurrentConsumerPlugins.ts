@@ -16,7 +16,6 @@ export function* getCurrentConsumerPluginData(action: any): any {
       headers: { 'Access-Control-Allow-Origin': '*' },
     });
     yield put({ type: ACTION_TYPES.SET_CURRENT_CONSUMER_DATA, payload: data });
-    yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
     yield put({
       type: ACTION_TYPES.TOAST_NOTIFICATION,
       payload: {
@@ -34,7 +33,5 @@ export function* getCurrentConsumerPluginData(action: any): any {
         severity: 'error',
       },
     });
-  } finally {
-    yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
   }
 }

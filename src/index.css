@@ -11,4 +11,34 @@ html,body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+  color:  #c7254e;
+  background-color:  #f9f2f4;
+  height:max-content;
+  width:max-content;
 }
+a {
+    color: #428bca;
+    text-decoration: none;
+}
+
+#tip{
+    padding: 2px 4px;
+    font-size: 90%;
+    color: #c7254e;
+    background-color: #f9f2f4;
+    border-radius: 3px;
+}
+
+.customInput {
+  padding: 10px;
+  border: none;
+  background-color: #f2f2f2;
+  border-bottom: 2px solid grey;
+  outline: none;
+}
+
+
+/* 
+.css-o8ooue-JoyTab-root.Mui-selected {
+  background-color: 
+} */

@@ -5,6 +5,7 @@ import React from 'react';
 import ArrowPointer from './ArrowPointer';
 import ColumnList from './ColumnList';
 import PluginList from './PluginList';
+import { CreatePlugins } from '../Plugins/CreatePlugins';
 
 type prop = {
   component: JSX.Element[];
@@ -31,6 +32,7 @@ const RowComponent = ({
   type,
   rawData,
 }: prop): JSX.Element => {
+  const [openPluginModal, setOpenPluginModal] = React.useState(false);
   return (
     <div>
       <div>
@@ -66,12 +68,16 @@ const RowComponent = ({
             >
               {rawData.plugins && <PluginList pluginList={rawData.plugins} />}
               <Tooltip
-                title="Add a service plugin that only targets this consumer"
+                title={`Add a ${type} plugin that only targets this consumer`}
                 variant="soft"
                 placement="top"
                 sx={{ width: '150px', fontSize: 12 }}
               >
-                <Button variant="plain" sx={{ width: 'fix-content' }}>
+                <Button
+                  variant="plain"
+                  sx={{ width: 'fix-content' }}
+                  onClick={() => setOpenPluginModal(true)}
+                >
                   + ADD PLUGIN
                 </Button>
               </Tooltip>
@@ -115,6 +121,10 @@ const RowComponent = ({
           </div>
         </div>
       </div>
+      <CreatePlugins
+        open={openPluginModal}
+        onClose={() => setOpenPluginModal(false)}
+      />
     </div>
   );
 };

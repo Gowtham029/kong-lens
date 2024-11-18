@@ -15,7 +15,7 @@ export const TagComponent = ({ tag, isList }: TagProps): JSX.Element => {
       }}
     >
       {isList ? (
-        <div style={{ fontSize: '5px' }}>{tag}</div>
+        <div>{tag}</div>
       ) : (
         <div
           style={{

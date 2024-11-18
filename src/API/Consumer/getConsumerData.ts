@@ -17,7 +17,6 @@ export function* getConsumerData(): any {
     });
     data = yield data.data;
     yield put({ type: ACTION_TYPES.SET_CONSUMER_DATA, payload: data });
-    yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
     yield put({ type: ACTION_TYPES.SET_CONSUMER_RAW_VIEW, payload: data });
     yield put({
       type: ACTION_TYPES.TOAST_NOTIFICATION,

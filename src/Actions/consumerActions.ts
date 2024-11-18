@@ -44,3 +44,10 @@ export const getAccessibleRoutesAction = (id: any) => {
     payload: id,
   };
 };
+
+export const getConsumerCredsAction = (id: any) => {
+  return {
+    type: ACTION_TYPES.GET_CONSUMER_CREDS_DATA,
+    payload: id,
+  };
+};

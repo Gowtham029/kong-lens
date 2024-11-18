@@ -164,7 +164,7 @@ const ServiceEditor = ({
                     />
                   )}
                   <span style={{ fontSize: '13px', color: '#B2B2B2' }}>
-                    {text.value}
+                    {text.help}
                   </span>
                 </div>
               ))}

@@ -6,7 +6,7 @@ import { IconInfoCircle } from '@tabler/icons-react';
 import AltRouteIcon from '@mui/icons-material/AltRoute';
 import ExtensionIcon from '@mui/icons-material/Extension';
 import { useDispatch, useSelector } from 'react-redux';
-import { TabList, TabPanel, Tabs, Tab } from '@mui/joy';
+import { TabList, TabPanel, Tabs, Tab, tabClasses } from '@mui/joy';
 import PageHeader from '../Features/PageHeader';
 import ServiceEditor from './ServiceEditor';
 import MiniPageHeader from '../Features/MiniPageHeader';
@@ -30,14 +30,6 @@ const ServiceDetail = (): JSX.Element => {
 
   const dispatch = useDispatch();
 
-  const list: navBarProps[] = [
-    { value: 'Service Details', icon: <IconInfoCircle /> },
-    { value: 'Routes', icon: <AltRouteIcon /> },
-    { value: 'Plugins', icon: <ExtensionIcon /> },
-  ];
-
-  const [currentPage, setCurrentPage] = React.useState(list[0].value);
-
   const { isOpen, toastMessage } = useSelector(
     (state: any) => state.toastReducer
   );
@@ -45,6 +37,20 @@ const ServiceDetail = (): JSX.Element => {
   const serviceData = useSelector(
     (state: any) => state.serviceReducer.currentServiceData
   );
+
+  const list: any = [
+    {
+      value: 'Service Details',
+      icon: <IconInfoCircle />,
+      comp: (
+        <ServiceEditor content={serviceData} textFields={SERVICE_TEXT_FIELDS} />
+      ),
+    },
+    { value: 'Routes', icon: <AltRouteIcon />, comp: <Routes nested /> },
+    { value: 'Plugins', icon: <ExtensionIcon />, comp: <Plugins nested /> },
+  ];
+
+  const [currentPage, setCurrentPage] = React.useState(list[0].value);
 
   const query = new URLSearchParams(search);
 
@@ -55,8 +61,6 @@ const ServiceDetail = (): JSX.Element => {
   React.useEffect(() => {
     const put = (): void => {
       dispatch(getCurrentServiceData(id as string));
-      dispatch(getCurrentServiceRouteData(id as string));
-      dispatch(getCurrentPagePluginData(id as string, 'services'));
     };
     if (!param) {
       put();
@@ -64,12 +68,23 @@ const ServiceDetail = (): JSX.Element => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const renderComponent = {
-    'Service Details': (
-      <ServiceEditor content={serviceData} textFields={SERVICE_TEXT_FIELDS} />
-    ),
-    Routes: <Routes nested />,
-    Plugins: <Plugins nested />,
+  const onClickPageFunctions = (page: string): void => {
+    switch (page) {
+      case 'Service Details': {
+        dispatch(getCurrentServiceData(id as string));
+        break;
+      }
+      case 'Routes': {
+        dispatch(getCurrentServiceRouteData(id as string));
+        break;
+      }
+      case 'Plugins': {
+        dispatch(getCurrentPagePluginData(id as string, 'services'));
+        break;
+      }
+      default:
+        break;
+    }
   };
 
   return (
@@ -91,26 +106,41 @@ const ServiceDetail = (): JSX.Element => {
       <br />
       <Divider />
       <Tabs
-        defaultValue={currentPage}
+        defaultValue={0}
         sx={{
           width: '1250px',
           margin: 'auto',
           display: 'flex',
           justifyContent: 'space-between',
+          bgcolor: 'transparent',
+          height: 'fit-content',
         }}
         orientation="vertical"
-        onChange={(event, value) => {
-          if (!param) setCurrentPage(value as string);
+        onChange={(event, value: any) => {
+          if (!param) setCurrentPage(list[value].value as string);
+          onClickPageFunctions(list[value].value as string);
         }}
       >
-        <TabList variant="plain" sx={{ gap: '5px' }}>
-          {list.map((tab) => (
+        <TabList
+          disableUnderline
+          variant="soft"
+          sx={{
+            p: 0.5,
+            gap: 0.5,
+            borderRadius: 'xl',
+            bgcolor: 'background.level1',
+            [`& .${tabClasses.root}[aria-selected="true"]`]: {
+              boxShadow: 'sm',
+              bgcolor: 'background.surface',
+            },
+            height: 'fit-content',
+          }}
+        >
+          {list.map((tab: any, index: any) => (
             <Tab
-              value={tab.value}
-              sx={{
-                background: tab.value === currentPage ? '#1ABB9C' : 'white',
-                width: '200px',
-              }}
+              value={index}
+              variant="plain"
+              disableIndicator
               disabled={param && currentPage !== tab.value}
             >
               <Box
@@ -137,9 +167,9 @@ const ServiceDetail = (): JSX.Element => {
           {loadingData ? (
             <Spinner />
           ) : (
-            <TabPanel value={currentPage}>
-              {renderComponent[currentPage as keyof typeof renderComponent]}
-            </TabPanel>
+            list.map((tab: any, index: any) => (
+              <TabPanel value={index}>{tab.comp}</TabPanel>
+            ))
           )}
         </Box>
       </Tabs>

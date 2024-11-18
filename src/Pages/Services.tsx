@@ -34,7 +34,7 @@ const Services = (): JSX.Element => {
     (state: any) => state.toastReducer
   );
 
-  const [promise, setPromise] = useState<unknown>();
+  const [promise, setPromise] = useState<any>();
   const { showServiceRawView } = useSelector(
     (state: any) => state.rawViewReducer
   );
@@ -119,11 +119,12 @@ const Services = (): JSX.Element => {
         // eslint-disable-next-line react/no-unstable-nested-components
         Cell: ({ row }) => (
           <div style={{ display: 'flex' }}>
-            {row.original.tags.map((tag: string) => (
-              <div key={tag}>
-                <TagComponent tag={tag} isList={false} />
-              </div>
-            ))}
+            {row.original.tags &&
+              row.original.tags.map((tag: string) => (
+                <div key={tag}>
+                  <TagComponent tag={tag} isList={false} />
+                </div>
+              ))}
           </div>
         ),
       },
@@ -296,7 +297,7 @@ const Services = (): JSX.Element => {
         open={confirmDialogOpen}
         onClose={() => {
           setConfirmDialogOpen(false);
-          reject(promise);
+          reset();
         }}
         onConfirm={() => {
           handleConfirmDelete();

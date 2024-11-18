@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useCallback, useMemo, useRef, useState } from 'react';
 import {
@@ -18,13 +19,17 @@ import { RouteDetails, PageTypeProps } from '../interfaces';
 import { RawView } from '../Components/Features/RawView';
 import { SnackBarAlert } from '../Components/Features/SnackBarAlert';
 import { TagComponent } from '../Components/Features/TagComponent';
-import { CreateRoute } from '../Components/Features/CreateRoute';
+import { ModalForm } from '../Components/Features/ModalForm';
 import { ACTION_TYPES } from '../Shared/actionTypes';
 import { deleteRouteData, getRouteData } from '../Actions/routeActions';
 import { toastDisable } from '../Actions/toastActions';
-import { ROUTE_DETAILS_INTERFACE } from '../Shared/constants';
+import {
+  ROUTE_DETAILS_INTERFACE,
+  ROUTE_TEXT_FIELDS,
+} from '../Shared/constants';
 import Spinner from '../Components/Features/spinner/Spinner';
 import { DateTimeFormat } from '../Utils/DateTimeFormatter';
+import RouteEditor from '../Components/Routes/RouteEditor';
 
 const Routes = ({ nested }: PageTypeProps): JSX.Element => {
   const dispatch = useDispatch();
@@ -348,13 +353,13 @@ const Routes = ({ nested }: PageTypeProps): JSX.Element => {
         open={confirmDialogOpen}
         onClose={() => {
           setConfirmDialogOpen(false);
-          reject(promise);
+          reset();
         }}
         onConfirm={() => {
           handleConfirmDelete();
         }}
       />
-      <CreateRoute
+      <ModalForm
         open={isRouteOpen}
         onClose={() => {
           dispatch({ type: ACTION_TYPES.CLOSE_ROUTE_MODAL });
@@ -363,7 +368,14 @@ const Routes = ({ nested }: PageTypeProps): JSX.Element => {
             payload: ROUTE_DETAILS_INTERFACE,
           });
         }}
-        serviceName={currentServiceData.name}
+        serviceName={`Add Route to ${currentServiceData.name}`}
+        component={
+          <RouteEditor
+            content={ROUTE_DETAILS_INTERFACE}
+            textFields={ROUTE_TEXT_FIELDS}
+            param={false}
+          />
+        }
       />
     </>
   );

@@ -214,6 +214,7 @@ export default function GlobalPlugin(): JSX.Element {
           navBarValueList={navBarValueList}
           currentPage={currentPage}
           showType="global"
+          nested={false}
         />
       </Box>
 

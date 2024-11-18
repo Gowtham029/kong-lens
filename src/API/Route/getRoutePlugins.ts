@@ -26,7 +26,6 @@ export function* getRoutePlugins(action: any): any {
         severity: 'success',
       },
     });
-    yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
   } catch (error: any) {
     yield put({
       type: ACTION_TYPES.TOAST_NOTIFICATION,

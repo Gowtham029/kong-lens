@@ -18,10 +18,7 @@ export function* postPlugin(action: any): any {
     });
     yield put({ type: ACTION_TYPES.SET_CURRENT_PLUGIN_DATA, payload: data });
     yield put({ type: ACTION_TYPES.ADD_PLUGIN_DATA, payload: data });
-    yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
-    action.navigate(`../plugins/${data.username}?newId=false`, {
-      replace: true,
-    });
+
     yield put({
       type: ACTION_TYPES.TOAST_NOTIFICATION,
       payload: {

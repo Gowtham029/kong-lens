@@ -34,7 +34,6 @@ function App(): JSX.Element {
     setUser(userObject);
     if (userObject && userObject.token !== null) {
       dispatch(setLoginToken(userObject));
-      if (location.pathname === '/') navigate(-1);
     }
   }, [dispatch, location.pathname, navigate, userAccess]);
   return (
@@ -65,16 +64,20 @@ function App(): JSX.Element {
             <Route path="/routes/:id/" element={<Home path="routesDetail" />} />
             <Route
               path="/consumers/:id/"
-              element={<Home path="consumerDetail" />}
+              element={<Home path="consumersDetail" />}
             />
-            <Route path="*" element={<Navigate to="/dashboard" replace />} />
+            <Route
+              path="/upstreams/:id/"
+              element={<Home path="upstreamsDetail" />}
+            />
+            <Route path="/" element={<Navigate to="/dashboard" replace />} />
           </>
         )}
         {!user && (
           <>
-            <Route path="/" element={<Login />} />
+            <Route path="" element={<Login />} />
             {/* <Route path="/" element={<Navigate to="/login" replace />} /> */}
-            <Route path="*" element={<Navigate to="/" replace />} />
+            {/* <Route path="*" element={<Navigate to="" replace />} /> */}
           </>
         )}
       </Routes>

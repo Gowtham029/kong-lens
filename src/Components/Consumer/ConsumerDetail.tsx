@@ -1,10 +1,11 @@
+/* eslint-disable consistent-return */
 /* eslint-disable no-param-reassign */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from 'react';
 import Tabs from '@mui/joy/Tabs';
 import TabList from '@mui/joy/TabList';
 import Tab from '@mui/joy/Tab';
-import { Box, CssBaseline, Divider, TabPanel } from '@mui/joy';
+import { Box, CssBaseline, Divider, TabPanel, tabClasses } from '@mui/joy';
 import { IconInfoCircle } from '@tabler/icons-react';
 import GroupsIcon from '@mui/icons-material/Groups';
 import SecurityIcon from '@mui/icons-material/Security';
@@ -15,7 +16,10 @@ import { useParams, useLocation } from 'react-router-dom';
 import * as _ from 'lodash';
 import PageHeader from '../Features/PageHeader';
 import { navBarProps } from '../../interfaces';
-import { getCurrentConsumerData } from '../../Actions/consumerActions';
+import {
+  getCurrentConsumerData,
+  getConsumerCredsAction,
+} from '../../Actions/consumerActions';
 import ConsumerEditor from './ConsumerEditor';
 import { CONSUMER_TEXT_FIELDS } from '../../Shared/constants';
 import Spinner from '../Features/spinner/Spinner';
@@ -29,6 +33,7 @@ import {
 import { getRouteData } from '../../Actions/routeActions';
 import { ACTION_TYPES } from '../../Shared/actionTypes';
 import Plugins from '../../Pages/Plugins';
+import Credentials from './Credentials';
 
 export default function ConsumerDetail(): JSX.Element {
   const { id } = useParams();
@@ -36,16 +41,6 @@ export default function ConsumerDetail(): JSX.Element {
   const { search } = useLocation();
 
   const dispatch = useDispatch();
-
-  const list: navBarProps[] = [
-    { value: 'Details', icon: <IconInfoCircle /> },
-    { value: 'Groups', icon: <GroupsIcon /> },
-    { value: 'Credentials', icon: <SecurityIcon /> },
-    { value: 'Accessible Routes', icon: <FilterDramaIcon /> },
-    { value: 'Plugins', icon: <ExtensionIcon /> },
-  ];
-
-  const [currentPage, setCurrentPage] = React.useState(list[0].value);
 
   const query = new URLSearchParams(search);
 
@@ -61,104 +56,14 @@ export default function ConsumerDetail(): JSX.Element {
   const [tableData, setTableData] = React.useState<any>([]);
 
   React.useEffect(() => {
-    dispatch(getCurrentPagePluginData(id as string, 'consumers'));
-  }, [dispatch, id]);
-
-  React.useEffect(() => {
-    if (!serviceData.length) dispatch(getServiceData());
-    if (!routeData.length) dispatch(getRouteData());
-    if (!pluginData.length) dispatch(getPluginData());
-
+    if (!param) {
+      if (!serviceData.length) dispatch(getServiceData());
+      if (!routeData.length) dispatch(getRouteData());
+      if (!pluginData.length) dispatch(getPluginData());
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  React.useEffect(() => {
-    const serviceMappedData: any = {};
-    serviceData.forEach((service: any) => {
-      // Assign the consumer_id to the service.
-      // We need this @ the frontend
-      service.consumer_id = id;
 
-      // Assign plugins to the service
-      service.plugins = _.filter(pluginData, (plugin: any) => {
-        return service.id === _.get(plugin, 'service.id');
-      });
-    });
-    // let data;
-    // serviceData.forEach((service: any) => {
-    //   data = service;
-    //   serviceMappedData[data.id] = data;
-    // });
-    // routeData.forEach((route: any) => {
-    //   data = route;
-    //   routeMappedData[data.id] = data;
-    // });
-    // pluginData.forEach((plugin: any) => {
-    //   data = plugin;
-    //   pluginMappedData[data.id] = data;
-    // });
-    // routeData.forEach((route: any) => {
-    //   data = route;
-    //   if (serviceMappedData[data.service.id]) {
-    //     let { routes } = serviceMappedData[data.service.id];
-    //     if (routes) routes.push(data);
-    //     else routes = [data];
-    //     serviceMappedData[data.service.id] = {
-    //       ...serviceMappedData[data.service.id],
-    //       routes,
-    //     };
-    //   }
-    // });
-    // pluginData.forEach((plugin: any) => {
-    //   data = plugin;
-    //   if (serviceMappedData[data.service.id]) {
-    //     let { plugins } = serviceMappedData[data.service.id];
-    //     if (plugins) plugins.push(data);
-    //     else plugins = [data];
-    //     serviceMappedData[data.service.id] = {
-    //       ...serviceMappedData[data.service.id],
-    //       plugins,
-    //     };
-    //   }
-    // });
-    const servicesResults = serviceData;
-    routeData.forEach((route: any) => {
-      // Assign the consumer_id to the route.
-      // We need this @ the frontend
-      route.consumer_id = id;
-      // Assign plugins to the service
-      route.plugins = _.filter(pluginData, (plugin: any) => {
-        return route.id === _.get(plugin, 'route.id');
-      });
-    });
-    servicesResults.forEach((service: any) => {
-      const routess = _.filter(routeData, (route: any) => {
-        return route.service.id === service.id;
-      });
-
-      if (routess) {
-        service.routes = routess;
-      }
-    });
-
-    // Filter out the servicesRecords that have no eligible routes
-    const filtered = _.filter(servicesResults, (service: any) => {
-      return service.routes && service.routes.length;
-    });
-
-    filtered.forEach((service: any) => {
-      serviceMappedData[service.id] = service;
-    });
-
-    setTableData(filtered);
-    dispatch({
-      type: ACTION_TYPES.SET_ACCESS_ROUTE_RAW_VIEW,
-      payload: serviceMappedData,
-    });
-    dispatch({
-      type: ACTION_TYPES.SET_ACCESS_ROUTE_DATA,
-      payload: filtered,
-    });
-  }, [dispatch, id, pluginData, routeData, serviceData]);
   React.useEffect(() => {
     const put = (): void => {
       dispatch(getCurrentConsumerData(id as string));
@@ -169,16 +74,115 @@ export default function ConsumerDetail(): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const renderComponent = {
-    Details: (
-      <ConsumerEditor
-        content={currentConsumerData}
-        textFields={CONSUMER_TEXT_FIELDS}
-      />
-    ),
-    Groups: <Routes nested />,
-    'Accessible Routes': <AccessibleRoutes collatedData={tableData} />,
-    Plugins: <Plugins nested />,
+  const list: any = [
+    {
+      value: 'Details',
+      icon: <IconInfoCircle />,
+      comp: (
+        <ConsumerEditor
+          content={currentConsumerData}
+          textFields={CONSUMER_TEXT_FIELDS}
+        />
+      ),
+    },
+    { value: 'Groups', icon: <GroupsIcon />, comp: <Routes nested /> },
+    { value: 'Credentials', icon: <SecurityIcon />, comp: <Credentials /> },
+    {
+      value: 'Accessible Routes',
+      icon: <FilterDramaIcon />,
+      comp: <AccessibleRoutes collatedData={tableData} />,
+    },
+    { value: 'Plugins', icon: <ExtensionIcon />, comp: <Plugins nested /> },
+  ];
+
+  const [currentPage, setCurrentPage] = React.useState(list[0].value);
+
+  const constructAccessibleRoutes = (): void => {
+    if (!param) {
+      const serviceMappedData: any = {};
+      serviceData.forEach((service: any) => {
+        // Assign the consumer_id to the service.
+        // We need this @ the frontend
+        service.consumer_id = id;
+        // Assign plugins to the service
+        service.plugins = _.filter(pluginData, (plugin: any) => {
+          return service.id === _.get(plugin, 'service.id');
+        });
+      });
+      const servicesResults = serviceData;
+      routeData.forEach((route: any) => {
+        // Assign the consumer_id to the route.
+        // We need this @ the frontend
+        route.consumer_id = id;
+        // Assign plugins to the service
+        route.plugins = _.filter(pluginData, (plugin: any) => {
+          return route.id === _.get(plugin, 'route.id');
+        });
+      });
+      servicesResults.forEach((service: any) => {
+        const routess = _.filter(routeData, (route: any) => {
+          return route.service.id === service.id;
+        });
+
+        if (routess) {
+          service.routes = routess;
+        }
+      });
+
+      // Filter out the servicesRecords that have no eligible routes
+      const filtered = _.filter(servicesResults, (service: any) => {
+        return service.routes && service.routes.length;
+      });
+
+      filtered.forEach((service: any) => {
+        serviceMappedData[service.id] = service;
+      });
+
+      setTableData(filtered);
+      dispatch({
+        type: ACTION_TYPES.SET_ACCESS_ROUTE_RAW_VIEW,
+        payload: serviceMappedData,
+      });
+      dispatch({
+        type: ACTION_TYPES.SET_ACCESS_ROUTE_DATA,
+        payload: filtered,
+      });
+    }
+  };
+
+  const onClickPageFunctions = (page: string): any => {
+    switch (page) {
+      case 'Details': {
+        if (!param) {
+          return getCurrentConsumerData(id as string);
+        }
+        break;
+      }
+      case 'Plugins': {
+        if (!param) {
+          return dispatch(getCurrentPagePluginData(id as string, 'consumers'));
+        }
+        break;
+      }
+      case 'Accessible Routes': {
+        return constructAccessibleRoutes();
+      }
+      case 'Credentials': {
+        const apiKeyValue: any = [
+          'basic-auth',
+          'key-auth',
+          'hmac-auth',
+          'oauth2',
+          'jwt',
+        ];
+        apiKeyValue.forEach((value: any) =>
+          dispatch(getConsumerCredsAction({ id, type: value }))
+        );
+        return;
+      }
+      default:
+        return null;
+    }
   };
   return (
     <>
@@ -189,28 +193,44 @@ export default function ConsumerDetail(): JSX.Element {
       />
       <br />
       <Tabs
-        defaultValue={currentPage}
+        defaultValue={0}
         sx={{
           width: 1250,
           margin: 'auto',
+          bgcolor: 'transparent',
+          height: 'fit-content',
         }}
-        onChange={(event, value) => {
-          if (!param) setCurrentPage(value as string);
+        onChange={(event, value: any) => {
+          if (!param) setCurrentPage(list[value].value as string);
+          onClickPageFunctions(list[value].value as string);
         }}
       >
-        <TabList variant="plain">
-          {list.map((tab) => (
+        <TabList
+          disableUnderline
+          variant="soft"
+          sx={{
+            p: 0.5,
+            gap: 0.5,
+            borderRadius: 'xl',
+            bgcolor: 'background.level1',
+            [`& .${tabClasses.root}[aria-selected="true"]`]: {
+              boxShadow: 'sm',
+              bgcolor: 'background.surface',
+            },
+            height: 'fit-content',
+          }}
+        >
+          {list.map((tab: any, index: any) => (
             <Tab
-              value={tab.value}
-              sx={{
-                background: tab.value === currentPage ? '#1ABB9C' : 'white',
-              }}
+              value={index}
+              variant="plain"
+              disableIndicator
               disabled={param && currentPage !== tab.value}
             >
               <Box
                 sx={{
                   display: 'flex',
-                  flexDirection: 'column',
+                  flexDirection: 'row',
                   margin: 'auto',
                   alignItems: 'center',
                 }}
@@ -225,9 +245,9 @@ export default function ConsumerDetail(): JSX.Element {
         {loadingData ? (
           <Spinner />
         ) : (
-          <TabPanel value={currentPage}>
-            {renderComponent[currentPage as keyof typeof renderComponent]}
-          </TabPanel>
+          list.map((tab: any, index: any) => (
+            <TabPanel value={index}>{tab.comp}</TabPanel>
+          ))
         )}
       </Tabs>
     </>

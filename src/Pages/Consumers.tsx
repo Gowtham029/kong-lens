@@ -229,7 +229,7 @@ export default function Consumers(): JSX.Element {
                 },
               }}
               onClick={() => {
-                navigate(`/consumers/createConsumer/?newId=true`);
+                navigate(`/consumers/createConsumer?newId=true`);
                 dispatch({
                   type: ACTION_TYPES.SET_CURRENT_CONSUMER_DATA,
                   payload: CONSUMER_DETAILS_INTERFACE,
@@ -247,7 +247,7 @@ export default function Consumers(): JSX.Element {
         open={confirmDialogOpen}
         onClose={() => {
           setConfirmDialogOpen(false);
-          reject(promise);
+          reset();
         }}
         onConfirm={() => {
           handleConfirmDelete();

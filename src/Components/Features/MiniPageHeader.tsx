@@ -6,21 +6,25 @@ import { PageHeaderIconProps } from '../../interfaces';
 const MiniPageHeaderBox = ({
   header,
   icon,
+  style,
+  button,
 }: PageHeaderIconProps): JSX.Element => (
   <Box
-    sx={{
-      bgcolor: '#EDEDED',
-      padding: '15px',
-      width: '1000px',
-      height: '110px',
-      marginTop: '10px',
-      display: 'flex',
-    }}
+    sx={
+      style || {
+        bgcolor: '#EDEDED',
+        padding: '15px',
+        width: '1000px',
+        height: '110px',
+        marginTop: '10px',
+        display: 'flex',
+      }
+    }
   >
     <div
       style={{
         fontSize: '20px',
-        margin: 'auto',
+        margin: style ? '0' : 'auto',
         alignItems: 'center',
         display: 'flex',
       }}
@@ -28,12 +32,22 @@ const MiniPageHeaderBox = ({
       {icon}
       {parse(header)}
     </div>
+    {button || null}
   </Box>
 );
 
 export default function MiniPageHeader({
   header,
   icon,
+  style,
+  button,
 }: PageHeaderIconProps): JSX.Element {
-  return <MiniPageHeaderBox header={header} icon={icon} />;
+  return (
+    <MiniPageHeaderBox
+      header={header}
+      icon={icon}
+      button={button}
+      style={style}
+    />
+  );
 }

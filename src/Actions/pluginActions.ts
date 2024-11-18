@@ -30,11 +30,10 @@ export const patchCurrentPluginData = (data: any, id: string) => {
   };
 };
 
-export const postCurrentPluginData = (data: any, func: NavigateFunction) => {
+export const postCurrentPluginData = (data: any) => {
   return {
     type: ACTION_TYPES.POST_CURRENT_PLUGIN_DATA,
     payload: data,
-    navigate: func,
   };
 };
 

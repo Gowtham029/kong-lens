@@ -33,7 +33,6 @@ export function* getRoutes(): any {
         severity: 'success',
       },
     });
-    yield put({ type: ACTION_TYPES.SET_LOADER_FALSE });
     return data;
   } catch (error: any) {
     yield put({
